@@ -163,10 +163,7 @@ export default function AnalysisProgressScreen() {
                 size="lg"
                 fullWidth
                 onPress={() => {
-                  if (Platform.OS === 'web') {
-                    window.alert('Analysis complete! Classification: Medium porosity, fine wavy hair. Chemical safety threshold validated.');
-                  }
-                  router.push('/dashboard');
+                  router.push('/analysis-results');
                 }}
                 style={styles.completeButton}
                 textStyle={styles.completeButtonText}

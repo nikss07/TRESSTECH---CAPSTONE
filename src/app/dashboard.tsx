@@ -80,13 +80,9 @@ export default function StaffDashboardScreen() {
   const handleTabChange = (tab: DashboardTab) => {
     setActiveTab(tab);
     if (tab === 'reports') {
-      if (Platform.OS === 'web') {
-        window.alert('Reports tab: Viewing chemical safety & formulation reports.');
-      } else {
-        Alert.alert('Reports', 'Viewing chemical safety & formulation reports.');
-      }
+      router.push('/reports');
     } else if (tab === 'profile') {
-      router.push('/signin');
+      router.push('/profile-settings');
     }
   };
 
@@ -104,8 +100,8 @@ export default function StaffDashboardScreen() {
           <StaffHeader
             staffName="Nic"
             avatarLetter="A"
-            onMenuPress={() => router.push('/')}
-            onAvatarPress={() => router.push('/signin')}
+            onMenuPress={() => router.push('/staff-menu')}
+            onAvatarPress={() => router.push('/profile-settings')}
           />
 
           {/* 2. "New analysis" Action Banner */}

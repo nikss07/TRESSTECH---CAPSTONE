@@ -123,7 +123,7 @@ export default function NewAnalysisSelectClientScreen() {
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Navigation Menu"
-            onPress={() => router.push('/')}
+            onPress={() => router.push('/staff-menu')}
             style={styles.menuButton}>
             <SymbolView
               name={{
@@ -243,8 +243,10 @@ export default function NewAnalysisSelectClientScreen() {
           setActiveTab(tab);
           if (tab === 'home') {
             router.push('/dashboard');
+          } else if (tab === 'reports') {
+            router.push('/reports');
           } else if (tab === 'profile') {
-            router.push('/signin');
+            router.push('/profile-settings');
           }
         }}
       />

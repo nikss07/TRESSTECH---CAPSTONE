@@ -47,6 +47,15 @@ export default function RootLayout() {
         <Stack.Screen name="new-analysis" />
         <Stack.Screen name="photo-capture" />
         <Stack.Screen name="analysis-progress" />
+        <Stack.Screen name="analysis-results" />
+        <Stack.Screen name="desired-color" />
+        <Stack.Screen name="suggested-formula" />
+        <Stack.Screen name="analysis-complete" />
+        <Stack.Screen name="client-profile" />
+        <Stack.Screen name="staff-menu" />
+        <Stack.Screen name="reports" />
+        <Stack.Screen name="chemical-reference" />
+        <Stack.Screen name="profile-settings" />
         <Stack.Screen name="explore" />
       </Stack>
     </ThemeProvider>
