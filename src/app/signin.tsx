@@ -47,12 +47,8 @@ export default function SignInScreen() {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      if (Platform.OS === 'web') {
-        window.alert(`Welcome back to TressTech, ${email}!`);
-      } else {
-        Alert.alert('Welcome Back', `Signed in successfully as ${email}`);
-      }
-    }, 1000);
+      router.push('/dashboard');
+    }, 600);
   };
 
   const handleForgotPassword = () => {

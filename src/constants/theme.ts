@@ -24,9 +24,9 @@ export const Colors = {
     howItWorksBackground: '#EDE4D3', // Specific warm background for How It Works section
     backgroundElement: '#E3D7C5',
     backgroundSelected: '#D6C8B2',
-    surface: '#FAF5EE',
-    surfaceSecondary: '#F2E8DC',
-    card: '#FAF5EE',
+    surface: '#FFFFFF',
+    surfaceSecondary: '#EBE2D5',
+    card: '#FFFFFF',
 
     // Typography Colors
     text: '#0F3D3A', // Brand tone for high-readability text
@@ -52,6 +52,20 @@ export const Colors = {
     warningBackground: '#FFFBEB',
     error: '#C62828',
     errorBackground: '#FFEBEE',
+
+    // Upload & Photo Capture Validation States
+    uploadBorderIdle: '#C5B59E',
+    uploadBgIdle: 'transparent',
+    uploadBgWarning: '#F2C6BF',
+    uploadBorderWarning: '#D66D5E',
+    uploadWarningIconBg: '#E74C3C',
+    uploadBgReady: '#F5EBCF',
+    uploadBorderReady: '#CC9F4D',
+    uploadReadyIconBg: '#0F3D3A',
+    warningCardBg: '#FDF0ED',
+    warningCardBorder: '#F5C6BE',
+    warningCardTitle: '#B92D1F',
+    warningCardText: '#7B2A20',
 
     // Navigation & Tints
     tint: '#CC9F4D',
@@ -101,6 +115,20 @@ export const Colors = {
     warningBackground: '#382B10',
     error: '#EF4444',
     errorBackground: '#3A1818',
+
+    // Upload & Photo Capture Validation States
+    uploadBorderIdle: '#375E59',
+    uploadBgIdle: 'transparent',
+    uploadBgWarning: '#3D1D1A',
+    uploadBorderWarning: '#C0392B',
+    uploadWarningIconBg: '#E74C3C',
+    uploadBgReady: '#2D3A24',
+    uploadBorderReady: '#CC9F4D',
+    uploadReadyIconBg: '#205E59',
+    warningCardBg: '#2B1513',
+    warningCardBorder: '#5C221C',
+    warningCardTitle: '#F87171',
+    warningCardText: '#FCA5A5',
 
     // Navigation & Tints
     tint: '#CC9F4D',

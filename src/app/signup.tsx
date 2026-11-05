@@ -46,17 +46,8 @@ export default function SignUpScreen() {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      if (Platform.OS === 'web') {
-        window.alert(`Welcome to TressTech, ${name}! Your account has been created.`);
-        router.push('/');
-      } else {
-        Alert.alert(
-          'Account Created',
-          `Welcome to TressTech, ${name}! Your account has been created successfully.`,
-          [{ text: 'Continue', onPress: () => router.push('/') }]
-        );
-      }
-    }, 1000);
+      router.push('/dashboard');
+    }, 600);
   };
 
   return (

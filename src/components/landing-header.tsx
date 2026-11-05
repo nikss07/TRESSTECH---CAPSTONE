@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { useState } from 'react';
 import {
@@ -36,6 +37,7 @@ export function LandingHeader({
   onClinicalPress,
 }: LandingHeaderProps) {
   const theme = useTheme();
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleNav = (action?: () => void) => {
@@ -138,6 +140,16 @@ export function LandingHeader({
                 onPress={() => handleNav(onClinicalPress)}>
                 <ThemedText type="bodyLarge" style={styles.menuLinkText}>
                   Clinical Credibility
+                </ThemedText>
+              </Pressable>
+              <Pressable
+                style={styles.menuLinkItem}
+                onPress={() => {
+                  setMenuOpen(false);
+                  router.push('/dashboard');
+                }}>
+                <ThemedText type="bodyLarge" style={[styles.menuLinkText, { color: theme.primary }]}>
+                  Staff Dashboard
                 </ThemedText>
               </Pressable>
             </View>
