@@ -1,98 +1,81 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { useRef } from 'react';
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+} from 'react-native';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+import { ClinicalSection } from '@/components/clinical-section';
+import { HeroSection } from '@/components/hero-section';
+import { HowItWorksSection } from '@/components/how-it-works-section';
+import { LandingFooter } from '@/components/landing-footer';
+import { LandingHeader } from '@/components/landing-header';
+import { useTheme } from '@/hooks/use-theme';
 
 export default function HomeScreen() {
+  const theme = useTheme();
+  const router = useRouter();
+  const scrollViewRef = useRef<any>(null);
+
+  const handleGetStarted = () => {
+    router.push('/signin');
+  };
+
+  const handleScrollToFeatures = () => {
+    scrollViewRef.current?.scrollTo({ y: 560, animated: true });
+  };
+
+  const handleScrollToHowItWorks = () => {
+    scrollViewRef.current?.scrollTo({ y: 560, animated: true });
+  };
+
+  const handleScrollToClinical = () => {
+    scrollViewRef.current?.scrollTo({ y: 880, animated: true });
+  };
+
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}>
+      <StatusBar style="dark" />
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
+      {/* Sticky Brand Navigation Header */}
+      <LandingHeader
+        onGetStartedPress={handleGetStarted}
+        onFeaturesPress={handleScrollToFeatures}
+        onHowItWorksPress={handleScrollToHowItWorks}
+        onClinicalPress={handleScrollToClinical}
+      />
 
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
+      {/* Main Scrollable Landing Experience */}
+      <ScrollView
+        ref={scrollViewRef}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}>
+        {/* 1. Hero Section with Green Gradient & 4 Hair Types Image */}
+        <HeroSection
+          onGetStartedPress={handleGetStarted}
+          onFeaturesPress={handleScrollToFeatures}
+        />
 
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+        {/* 2. "How It Works" Section with Warm EDE4D3 Background */}
+        <HowItWorksSection />
+
+        {/* 3. "Clinical Credibility, Validated by Experts" Section with 10s Carousel */}
+        <ClinicalSection />
+
+        {/* 4. Branded Dark Footer with Navigation & Social Links */}
+        <LandingFooter />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
   safeArea: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
   },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
-  },
-  title: {
-    textAlign: 'center',
-  },
-  code: {
-    textTransform: 'uppercase',
-  },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+  scrollContent: {
+    flexGrow: 1,
   },
 });
