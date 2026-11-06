@@ -2,7 +2,6 @@ import { StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { BorderRadii, FontWeights, Shadows, Spacing, Typography } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
 
 export type StepCardProps = {
   stepNumber: number | string;
@@ -11,23 +10,10 @@ export type StepCardProps = {
 };
 
 export function StepCard({ stepNumber, title, description }: StepCardProps) {
-  const theme = useTheme();
-
   return (
-    <View
-      style={[
-        styles.cardContainer,
-        {
-          backgroundColor: theme.surface,
-          borderColor: theme.border,
-        },
-      ]}>
+    <View style={styles.cardContainer}>
       {/* Number Badge */}
-      <View
-        style={[
-          styles.badgeContainer,
-          { backgroundColor: theme.secondary },
-        ]}>
+      <View style={styles.badgeContainer}>
         <ThemedText style={styles.badgeText}>{stepNumber}</ThemedText>
       </View>
 
@@ -47,7 +33,9 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     padding: Spacing.four,
     borderRadius: BorderRadii.lg,
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
+    borderColor: '#E6DCCA',
     gap: Spacing.three,
     ...(Shadows.sm as object),
   },
@@ -55,12 +43,13 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: BorderRadii.full,
+    backgroundColor: '#0F3D3A',
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 2,
   },
   badgeText: {
-    color: '#EDE4D6',
+    color: '#FFFFFF',
     fontSize: Typography.small.fontSize,
     fontWeight: FontWeights.bold,
   },
@@ -71,6 +60,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: Typography.body.fontSize,
     fontWeight: FontWeights.bold,
+    color: '#0F3D3A',
   },
   cardDescription: {
     color: '#4A625E',
