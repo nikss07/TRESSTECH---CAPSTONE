@@ -2,8 +2,6 @@ import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import {
-  Alert,
-  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -15,8 +13,10 @@ import { ActionBanner } from '@/components/action-banner';
 import { ClientListItem } from '@/components/client-list-item';
 import { DashboardNavBar, type DashboardTab } from '@/components/dashboard-nav-bar';
 import { StaffHeader } from '@/components/staff-header';
+import { StaffSideDrawer } from '@/components/staff-side-drawer';
 import { StatCard } from '@/components/stat-card';
 import { ThemedText } from '@/components/themed-text';
+import { AnimatedEntrance } from '@/components/ui/animated-entrance';
 import {
   FontWeights,
   MaxContentWidth,
@@ -29,6 +29,7 @@ export default function StaffDashboardScreen() {
   const theme = useTheme();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<DashboardTab>('home');
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const clients = [
     {
@@ -59,22 +60,14 @@ export default function StaffDashboardScreen() {
   };
 
   const handleClientPress = (name: string) => {
-    if (Platform.OS === 'web') {
-      window.alert(`Opening profile & chemical treatment history for ${name}.`);
-    } else {
-      Alert.alert(
-        `${name}'s Profile`,
-        'Loading trichology records, porosity history, and safe chemical treatment threshold reports.'
-      );
-    }
+    router.push({
+      pathname: '/client-profile',
+      params: { name },
+    });
   };
 
   const handleViewAll = () => {
-    if (Platform.OS === 'web') {
-      window.alert('Viewing full client database (24 total clients).');
-    } else {
-      Alert.alert('Client Directory', 'Showing all 24 clients.');
-    }
+    router.push('/client-list');
   };
 
   const handleTabChange = (tab: DashboardTab) => {
@@ -97,70 +90,87 @@ export default function StaffDashboardScreen() {
         contentContainerStyle={styles.scrollContent}>
         <View style={styles.contentWrapper}>
           {/* 1. Header with Logo & Staff Welcome */}
-          <StaffHeader
-            staffName="Nic"
-            avatarLetter="A"
-            onMenuPress={() => router.push('/staff-menu')}
-            onAvatarPress={() => router.push('/profile-settings')}
-          />
+          <AnimatedEntrance delay={0} duration={360} slideDistance={12}>
+            <StaffHeader
+              staffName="Nic"
+              avatarLetter="A"
+              onMenuPress={() => setIsDrawerOpen(true)}
+              onAvatarPress={() => router.push('/profile-settings')}
+            />
+          </AnimatedEntrance>
 
           {/* 2. "New analysis" Action Banner */}
-          <ActionBanner
-            title="New analysis"
-            subtitle="Start with a client profile"
-            onPress={handleNewAnalysis}
-          />
+          <AnimatedEntrance delay={100} duration={380} slideDistance={16}>
+            <ActionBanner
+              title="New analysis"
+              subtitle="Start with a client profile"
+              onPress={handleNewAnalysis}
+            />
+          </AnimatedEntrance>
 
           {/* 3. Metrics Summary Grid */}
-          <View style={styles.metricsGrid}>
-            <StatCard
-              value="24"
-              label="Analyses this week"
-              variant="default"
-            />
-            <StatCard
-              value="2"
-              label="Needs follow-up"
-              variant="highlight"
-            />
-          </View>
+          <AnimatedEntrance delay={180} duration={400} slideDistance={16}>
+            <View style={styles.metricsGrid}>
+              <StatCard
+                value="24"
+                label="Analyses this week"
+                variant="default"
+              />
+              <StatCard
+                value="2"
+                label="Needs follow-up"
+                variant="highlight"
+              />
+            </View>
+          </AnimatedEntrance>
 
           {/* 4. Recent Clients Section */}
-          <View style={styles.recentSection}>
-            <View style={styles.sectionHeaderRow}>
-              <ThemedText style={[styles.sectionTitle, { color: theme.text }]}>
-                Recent clients
-              </ThemedText>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="View all recent clients"
-                onPress={handleViewAll}>
-                <ThemedText
-                  style={[styles.viewAllText, { color: theme.text }]}>
-                  View all
+          <AnimatedEntrance delay={260} duration={420} slideDistance={16}>
+            <View style={styles.recentSection}>
+              <View style={styles.sectionHeaderRow}>
+                <ThemedText style={[styles.sectionTitle, { color: theme.text }]}>
+                  Recent clients
                 </ThemedText>
-              </Pressable>
-            </View>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="View all recent clients"
+                  onPress={handleViewAll}>
+                  <ThemedText
+                    style={[styles.viewAllText, { color: theme.text }]}>
+                    View all
+                  </ThemedText>
+                </Pressable>
+              </View>
 
-            {/* Client Cards Stack */}
-            <View style={styles.clientList}>
-              {clients.map((client) => (
-                <ClientListItem
-                  key={client.id}
-                  name={client.name}
-                  hairDetails={client.hairDetails}
-                  initial={client.initial}
-                  hasStatusDot={client.hasStatusDot}
-                  onPress={() => handleClientPress(client.name)}
-                />
-              ))}
+              {/* Client Cards Stack */}
+              <View style={styles.clientList}>
+                {clients.map((client) => (
+                  <ClientListItem
+                    key={client.id}
+                    name={client.name}
+                    hairDetails={client.hairDetails}
+                    initial={client.initial}
+                    hasStatusDot={client.hasStatusDot}
+                    onPress={() => handleClientPress(client.name)}
+                  />
+                ))}
+              </View>
             </View>
-          </View>
+          </AnimatedEntrance>
         </View>
       </ScrollView>
 
       {/* 5. Fixed Staff Navigation Bar */}
       <DashboardNavBar activeTab={activeTab} onTabChange={handleTabChange} />
+
+      {/* 6. Smooth Animated Staff Sidebar (Drawer) */}
+      <StaffSideDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        staffName="JUNAICA LAYNO"
+        staffRole="ADMIN"
+        staffInitial="J"
+      />
     </SafeAreaView>
   );
 }
@@ -172,7 +182,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: Spacing.four,
-    paddingTop: Platform.select({ ios: Spacing.two, default: Spacing.four }),
+    paddingTop: 0,
     paddingBottom: Spacing.six,
     alignItems: 'center',
   },
@@ -184,7 +194,7 @@ const styles = StyleSheet.create({
   metricsGrid: {
     width: '100%',
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'stretch',
     gap: Spacing.three,
   },
   recentSection: {

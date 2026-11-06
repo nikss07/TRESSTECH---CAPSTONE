@@ -19,6 +19,7 @@ import { BrandWordmark } from '@/components/brand-wordmark';
 import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { LoadingScreen } from '@/components/ui/loading-screen';
 import {
   BorderRadii,
   FontWeights,
@@ -49,7 +50,7 @@ export default function SignInScreen() {
     setTimeout(() => {
       setLoading(false);
       router.push('/dashboard');
-    }, 600);
+    }, 1200);
   };
 
   const handleForgotPassword = () => {
@@ -204,6 +205,13 @@ export default function SignInScreen() {
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
+
+      {/* Reusable Branded Loading Screen */}
+      <LoadingScreen
+        visible={loading}
+        message="Signing you in..."
+        submessage="Preparing your hair analysis records"
+      />
     </ImageBackground>
   );
 }

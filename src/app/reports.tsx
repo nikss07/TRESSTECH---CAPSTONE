@@ -1,10 +1,7 @@
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { SymbolView } from 'expo-symbols';
 import { useState } from 'react';
 import {
-  Image,
-  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -13,18 +10,16 @@ import {
 } from 'react-native';
 
 import { DashboardNavBar, type DashboardTab } from '@/components/dashboard-nav-bar';
+import { DashboardTopNavbar } from '@/components/dashboard-top-navbar';
 import { ReportCard } from '@/components/report-card';
-import { BrandWordmark } from '@/components/brand-wordmark';
 import { ThemedText } from '@/components/themed-text';
 import { SearchBar } from '@/components/ui/search-bar';
 import {
   BorderRadii,
   FontWeights,
-  IconSizes,
   MaxContentWidth,
   Spacing,
   Typography,
-  BrandColors,
 } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -75,39 +70,8 @@ export default function ReportsScreen() {
       style={[styles.safeArea, { backgroundColor: theme.background }]}>
       <StatusBar style="dark" />
 
-      {/* Top Navbar Header with Close Button */}
-      <View style={[styles.topNavbar, { backgroundColor: BrandColors.headerBg, borderBottomColor: theme.border }]}>
-        <View style={styles.topNavbarContent}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="TressTech Home"
-            onPress={() => router.push('/dashboard')}
-            style={styles.brandRow}>
-            <Image
-              source={require('@/assets/images/tresstechlogo.png')}
-              style={styles.logoImage}
-              resizeMode="contain"
-            />
-            <BrandWordmark style={styles.brandTitle} />
-          </Pressable>
-
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Close analysis library"
-            onPress={() => router.push('/dashboard')}
-            style={styles.closeButton}>
-            <SymbolView
-              name={{
-                ios: 'xmark',
-                android: 'close',
-                web: 'close',
-              }}
-              size={IconSizes.md}
-              tintColor={theme.secondary}
-            />
-          </Pressable>
-        </View>
-      </View>
+      {/* Top Navbar Header matching Dashboard */}
+      <DashboardTopNavbar />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -217,7 +181,12 @@ export default function ReportsScreen() {
                 porosity={report.porosity}
                 verdict={report.verdict}
                 thumbnailColor={report.thumbnailColor}
-                onPress={() => router.push('/suggested-formula')}
+                onPress={() =>
+                  router.push({
+                    pathname: '/client-profile',
+                    params: { name: report.clientName },
+                  })
+                }
               />
             ))}
           </View>
@@ -245,37 +214,6 @@ export default function ReportsScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-  },
-  topNavbar: {
-    width: '100%',
-    borderBottomWidth: 1,
-    alignItems: 'center',
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Platform.select({ ios: Spacing.two, default: Spacing.two }),
-  },
-  topNavbarContent: {
-    width: '100%',
-    maxWidth: MaxContentWidth,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  brandRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.two,
-  },
-  logoImage: {
-    width: 32,
-    height: 32,
-    borderRadius: BorderRadii.full,
-  },
-  brandTitle: {
-    fontSize: Typography.subtitle.fontSize,
-    fontWeight: FontWeights.bold,
-  },
-  closeButton: {
-    padding: Spacing.one,
   },
   scrollContent: {
     flexGrow: 1,
