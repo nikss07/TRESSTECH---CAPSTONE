@@ -18,146 +18,92 @@ export const BrandColors = {
   footerSocialBg: '#2C5552',
 } as const;
 
+const WarmLinenPalette = {
+  // Brand Core
+  primary: '#CC9F4D',
+  primaryLight: '#E5BD78',
+  primaryDark: '#AF8436',
+  primaryText: '#0F3D3A', // High-contrast text on primary buttons
+  secondary: '#0F3D3A',
+  secondaryLight: '#1C5B56',
+  secondaryText: '#EDE4D6',
+
+  // Backgrounds & Surfaces (warm linen beige + white cards matching Figma prototypes)
+  background: '#EDE4D6', // Main warm linen background
+  howItWorksBackground: '#EDE4D3', // Specific warm background for How It Works section
+  backgroundElement: '#E3D7C5',
+  backgroundSelected: '#D6C8B2',
+  surface: '#FFFFFF',
+  surfaceSecondary: '#EBE2D5',
+  card: '#FFFFFF',
+
+  // Typography Colors
+  text: '#0F3D3A', // Brand tone for high-readability text
+  textSecondary: '#4A625E',
+  textMuted: '#7E918E',
+  textInverse: '#EDE4D6',
+
+  // Borders & Dividers
+  border: '#D8CAB5',
+  borderSubtle: '#E6DCCA',
+  borderFocus: '#CC9F4D',
+
+  // Buttons
+  buttonBackground: '#CC9F4D',
+  buttonText: '#0F3D3A',
+  buttonSecondaryBackground: '#0F3D3A',
+  buttonSecondaryText: '#EDE4D6',
+
+  // Semantics & Status
+  success: '#2E7D32',
+  successBackground: '#E8F5E9',
+  warning: '#D97706',
+  warningBackground: '#FFFBEB',
+  error: '#C62828',
+  errorBackground: '#FFEBEE',
+
+  // Upload & Photo Capture Validation States
+  uploadBorderIdle: '#C5B59E',
+  uploadBgIdle: 'transparent',
+  uploadBgWarning: '#F2C6BF',
+  uploadBorderWarning: '#D66D5E',
+  uploadWarningIconBg: '#E74C3C',
+  uploadBgReady: '#F5EBCF',
+  uploadBorderReady: '#CC9F4D',
+  uploadReadyIconBg: '#0F3D3A',
+  warningCardBg: '#FDF0ED',
+  warningCardBorder: '#F5C6BE',
+  warningCardTitle: '#B92D1F',
+  warningCardText: '#7B2A20',
+
+  // Navigation & Tints
+  tint: '#CC9F4D',
+  tabIconDefault: '#7E918E',
+  tabIconSelected: '#0F3D3A',
+} as const;
+
 export const Colors = {
-  light: {
-    // Brand Core
-    primary: '#CC9F4D',
-    primaryLight: '#E5BD78',
-    primaryDark: '#AF8436',
-    primaryText: '#0F3D3A', // High-contrast text on primary buttons
-    secondary: '#0F3D3A',
-    secondaryLight: '#1C5B56',
-    secondaryText: '#EDE4D6',
-
-    // Backgrounds & Surfaces
-    background: '#EDE4D6', // Main background requested
-    howItWorksBackground: '#EDE4D3', // Specific warm background for How It Works section
-    backgroundElement: '#E3D7C5',
-    backgroundSelected: '#D6C8B2',
-    surface: '#FFFFFF',
-    surfaceSecondary: '#EBE2D5',
-    card: '#FFFFFF',
-
-    // Typography Colors
-    text: '#0F3D3A', // Brand tone for high-readability text
-    textSecondary: '#4A625E',
-    textMuted: '#7E918E',
-    textInverse: '#EDE4D6',
-
-    // Borders & Dividers
-    border: '#D8CAB5',
-    borderSubtle: '#E6DCCA',
-    borderFocus: '#CC9F4D',
-
-    // Buttons
-    buttonBackground: '#CC9F4D',
-    buttonText: '#0F3D3A',
-    buttonSecondaryBackground: '#0F3D3A',
-    buttonSecondaryText: '#EDE4D6',
-
-    // Semantics & Status
-    success: '#2E7D32',
-    successBackground: '#E8F5E9',
-    warning: '#D97706',
-    warningBackground: '#FFFBEB',
-    error: '#C62828',
-    errorBackground: '#FFEBEE',
-
-    // Upload & Photo Capture Validation States
-    uploadBorderIdle: '#C5B59E',
-    uploadBgIdle: 'transparent',
-    uploadBgWarning: '#F2C6BF',
-    uploadBorderWarning: '#D66D5E',
-    uploadWarningIconBg: '#E74C3C',
-    uploadBgReady: '#F5EBCF',
-    uploadBorderReady: '#CC9F4D',
-    uploadReadyIconBg: '#0F3D3A',
-    warningCardBg: '#FDF0ED',
-    warningCardBorder: '#F5C6BE',
-    warningCardTitle: '#B92D1F',
-    warningCardText: '#7B2A20',
-
-    // Navigation & Tints
-    tint: '#CC9F4D',
-    tabIconDefault: '#7E918E',
-    tabIconSelected: '#0F3D3A',
-  },
-  dark: {
-    // Brand Core
-    primary: '#CC9F4D',
-    primaryLight: '#DFC085',
-    primaryDark: '#AF8436',
-    primaryText: '#0F3D3A',
-    secondary: '#205E59',
-    secondaryLight: '#2C7E77',
-    secondaryText: '#EDE4D6',
-
-    // Backgrounds & Surfaces
-    background: '#091E1C',
-    howItWorksBackground: '#0B2421',
-    backgroundElement: '#0F3D3A',
-    backgroundSelected: '#164F4B',
-    surface: '#0E2E2A',
-    surfaceSecondary: '#143C37',
-    card: '#0E2E2A',
-
-    // Typography Colors
-    text: '#EDE4D6',
-    textSecondary: '#A2B6B2',
-    textMuted: '#6B807C',
-    textInverse: '#0F3D3A',
-
-    // Borders & Dividers
-    border: '#1B4743',
-    borderSubtle: '#143834',
-    borderFocus: '#CC9F4D',
-
-    // Buttons
-    buttonBackground: '#CC9F4D',
-    buttonText: '#0F3D3A',
-    buttonSecondaryBackground: '#EDE4D6',
-    buttonSecondaryText: '#0F3D3A',
-
-    // Semantics & Status
-    success: '#4CAF50',
-    successBackground: '#17361E',
-    warning: '#F59E0B',
-    warningBackground: '#382B10',
-    error: '#EF4444',
-    errorBackground: '#3A1818',
-
-    // Upload & Photo Capture Validation States
-    uploadBorderIdle: '#375E59',
-    uploadBgIdle: 'transparent',
-    uploadBgWarning: '#3D1D1A',
-    uploadBorderWarning: '#C0392B',
-    uploadWarningIconBg: '#E74C3C',
-    uploadBgReady: '#2D3A24',
-    uploadBorderReady: '#CC9F4D',
-    uploadReadyIconBg: '#205E59',
-    warningCardBg: '#2B1513',
-    warningCardBorder: '#5C221C',
-    warningCardTitle: '#F87171',
-    warningCardText: '#FCA5A5',
-
-    // Navigation & Tints
-    tint: '#CC9F4D',
-    tabIconDefault: '#6B807C',
-    tabIconSelected: '#CC9F4D',
-  },
+  light: WarmLinenPalette,
+  dark: WarmLinenPalette,
 } as const;
 
 export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
 
 export const Fonts = Platform.select({
   ios: {
-    sans: 'system-ui',
+    sans: '42dot Sans',
     serif: 'ui-serif',
     rounded: 'ui-rounded',
     mono: 'ui-monospace',
   },
+  android: {
+    sans: '42dotSans_400Regular',
+    serif: 'serif',
+    rounded: 'normal',
+    mono: 'monospace',
+  },
   default: {
-    sans: 'normal',
+    sans: '42dotSans_400Regular',
     serif: 'serif',
     rounded: 'normal',
     mono: 'monospace',
