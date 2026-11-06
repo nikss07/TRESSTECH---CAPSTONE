@@ -1,24 +1,26 @@
 import { useSyncExternalStore } from 'react';
-import { useColorScheme as useRNColorScheme } from 'react-native';
+import { Appearance, type ColorSchemeName } from 'react-native';
 
-const emptySubscribe = () => () => {};
+function subscribe(callback: () => void) {
+  const listener = Appearance.addChangeListener(callback);
+  return () => listener.remove();
+}
 
-/**
- * To support static rendering, this value needs to be re-calculated on the client side for web
- */
-export function useColorScheme() {
-  const hasHydrated = useSyncExternalStore(
-    emptySubscribe,
-    () => true,
-    () => false
-  );
+function getSnapshot(): ColorSchemeName {
+  return Appearance.getColorScheme() ?? 'light';
+}
 
-  const colorScheme = useRNColorScheme();
-
-  if (hasHydrated) {
-    return colorScheme;
-  }
-
+function getServerSnapshot(): ColorSchemeName {
   return 'light';
 }
+
+/**
+ * SSR-safe and React 19 compliant color scheme hook for web.
+ * Subscribes to Appearance changes without calling setState in an effect.
+ */
+export function useColorScheme(): ColorSchemeName {
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+}
+
+
 

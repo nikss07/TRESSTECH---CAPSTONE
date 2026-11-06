@@ -8,6 +8,16 @@ import '@/global.css';
 
 import { Platform } from 'react-native';
 
+export const BrandColors = {
+  tress: '#188982',
+  tech: '#15645F',
+  solid: '#15645F',
+  headerBg: '#EDE4D6',
+  howItWorksBg: '#F2ECE1',
+  footerBg: '#0F3D3A',
+  footerSocialBg: '#2C5552',
+} as const;
+
 export const Colors = {
   light: {
     // Brand Core
