@@ -63,11 +63,16 @@ export function ClientListItem({
 
       {/* Client Information */}
       <View style={styles.infoContainer}>
-        <ThemedText style={[styles.nameText, { color: theme.text }]}>
+        <ThemedText
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={[styles.nameText, { color: theme.text }]}>
           {name}
         </ThemedText>
         {subline ? (
           <ThemedText
+            numberOfLines={1}
+            ellipsizeMode="tail"
             style={[styles.detailsText, { color: theme.textSecondary }]}>
             {subline}
           </ThemedText>
@@ -146,6 +151,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.two,
+    flexShrink: 0,
   },
   badgeText: {
     fontSize: 11,

@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput, View } from 'react-native';
+import { type StyleProp, StyleSheet, TextInput, View, type ViewStyle } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui/button';
@@ -19,6 +19,8 @@ export type CreateClientCardProps = {
   onContactChange: (text: string) => void;
   onSave: () => void;
   loading?: boolean;
+  style?: StyleProp<ViewStyle>;
+  bare?: boolean;
 };
 
 export function CreateClientCard({
@@ -28,6 +30,8 @@ export function CreateClientCard({
   onContactChange,
   onSave,
   loading = false,
+  style,
+  bare = false,
 }: CreateClientCardProps) {
   const theme = useTheme();
 
@@ -36,9 +40,11 @@ export function CreateClientCard({
       style={[
         styles.cardContainer,
         {
-          backgroundColor: theme.card,
-          borderColor: theme.borderSubtle,
+          backgroundColor: bare ? 'transparent' : theme.card,
+          borderColor: bare ? 'transparent' : theme.borderSubtle,
         },
+        bare && styles.bareContainer,
+        style,
       ]}>
       {/* Field 1: Client Name */}
       <View style={styles.fieldGroup}>
@@ -112,6 +118,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     gap: Spacing.four,
     ...(Shadows.sm as object),
+  },
+  bareContainer: {
+    padding: 0,
+    borderWidth: 0,
+    backgroundColor: 'transparent',
+    elevation: 0,
+    shadowColor: 'transparent',
+    shadowOpacity: 0,
+    shadowRadius: 0,
+    shadowOffset: { width: 0, height: 0 },
   },
   fieldGroup: {
     gap: Spacing.two,

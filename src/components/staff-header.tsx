@@ -1,5 +1,6 @@
 import { SymbolView } from 'expo-symbols';
-import { Image, Pressable, StyleSheet, View } from 'react-native';
+import { Image, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BrandWordmark } from '@/components/brand-wordmark';
 import { ThemedText } from '@/components/themed-text';
@@ -27,11 +28,15 @@ export function StaffHeader({
   onAvatarPress,
 }: StaffHeaderProps) {
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
+
+  // Moves the header comfortably down below camera punch-holes, notches, and status bars
+  const topPadding = Math.max(insets.top, Platform.OS === 'android' ? 38 : 20) + Spacing.two;
 
   return (
     <View style={styles.container}>
       {/* Top Navbar */}
-      <View style={styles.navRow}>
+      <View style={[styles.navRow, { paddingTop: topPadding }]}>
         <View style={styles.brandGroup}>
           <Image
             source={require('@/assets/images/tresstechlogo.png')}
@@ -45,6 +50,7 @@ export function StaffHeader({
           accessibilityRole="button"
           accessibilityLabel="Dashboard Menu"
           onPress={onMenuPress}
+          hitSlop={{ top: 16, bottom: 16, left: 16, right: 16 }}
           style={({ pressed }) => [styles.menuButton, pressed && styles.pressed]}>
           <SymbolView
             name={{
@@ -115,7 +121,11 @@ const styles = StyleSheet.create({
     fontWeight: FontWeights.bold,
   },
   menuButton: {
-    padding: Spacing.one,
+    width: 44,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: BorderRadii.sm,
   },
   pressed: {
     opacity: 0.6,

@@ -6,7 +6,6 @@ import {
   FontWeights,
   Shadows,
   Spacing,
-  Typography,
 } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -53,21 +52,23 @@ export function StatCard({
 const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
+    minHeight: 96,
+    justifyContent: 'center',
     paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.four,
+    paddingVertical: Spacing.three,
     borderRadius: BorderRadii.xl,
     borderWidth: 1,
     gap: Spacing.half,
     ...(Shadows.sm as object),
   },
   valueText: {
-    fontSize: 32,
-    lineHeight: 38,
+    fontSize: 26,
+    lineHeight: 32,
     fontWeight: FontWeights.bold,
   },
   labelText: {
-    fontSize: Typography.small.fontSize,
-    lineHeight: 18,
+    fontSize: 12.5,
+    lineHeight: 17,
     fontWeight: FontWeights.medium,
   },
 });
