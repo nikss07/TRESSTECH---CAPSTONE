@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
+import { AppVersion } from '@/constants/app-version';
 import {
   BorderRadii,
   BrandColors,
@@ -69,9 +70,14 @@ export function LandingFooter({ visible = true }: LandingFooterProps) {
             ],
           },
         ]}>
-        {/* Top Header Row: Brand Title Left, Copyright Right */}
+        {/* Top Header Row: Brand Title Left, Version, Copyright Right */}
         <View style={styles.brandRow}>
-          <ThemedText style={styles.brandTitle}>TressTech</ThemedText>
+          <View style={styles.brandTitleGroup}>
+            <ThemedText style={styles.brandTitle}>TressTech</ThemedText>
+            <View style={styles.versionPill}>
+              <ThemedText style={styles.versionText}>{AppVersion}</ThemedText>
+            </View>
+          </View>
           <ThemedText style={styles.copyrightText}>© 2024</ThemedText>
         </View>
 
@@ -128,11 +134,30 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
   },
+  brandTitleGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two,
+  },
   brandTitle: {
     color: '#EDE4D6',
     fontSize: Typography.bodyLarge.fontSize,
     fontWeight: FontWeights.bold,
     letterSpacing: -0.2,
+  },
+  versionPill: {
+    paddingHorizontal: Spacing.two,
+    paddingVertical: 2,
+    borderRadius: BorderRadii.pill,
+    backgroundColor: 'rgba(204, 159, 77, 0.16)', // Subtle warm gold translucent fill
+    borderWidth: 1,
+    borderColor: 'rgba(204, 159, 77, 0.45)', // Gold border
+  },
+  versionText: {
+    color: '#E5BD78', // Crisp warm gold
+    fontSize: 11,
+    fontWeight: FontWeights.semiBold,
+    letterSpacing: 0.4,
   },
   copyrightText: {
     color: 'rgba(237, 228, 214, 0.75)',
