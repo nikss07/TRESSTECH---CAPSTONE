@@ -1,6 +1,6 @@
 import { SymbolView } from 'expo-symbols';
-import { type ComponentProps } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { type ComponentProps, useEffect, useState } from 'react';
+import { Keyboard, Platform, Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import {
@@ -18,13 +18,41 @@ export type DashboardTab = 'home' | 'reports' | 'profile';
 export type DashboardNavBarProps = {
   activeTab?: DashboardTab;
   onTabChange?: (tab: DashboardTab) => void;
+  hideOnKeyboard?: boolean;
 };
 
 export function DashboardNavBar({
   activeTab = 'home',
   onTabChange,
+  hideOnKeyboard = true,
 }: DashboardNavBarProps) {
   const theme = useTheme();
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    if (!hideOnKeyboard) return;
+
+    const showEvent =
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
+    const hideEvent =
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
+
+    const showSubscription = Keyboard.addListener(showEvent, () => {
+      setIsKeyboardVisible(true);
+    });
+    const hideSubscription = Keyboard.addListener(hideEvent, () => {
+      setIsKeyboardVisible(false);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, [hideOnKeyboard]);
+
+  if (hideOnKeyboard && isKeyboardVisible) {
+    return null;
+  }
 
   const tabs: {
     id: DashboardTab;
@@ -60,7 +88,7 @@ export function DashboardNavBar({
       <View style={styles.navBarContent}>
         {tabs.map((tab) => {
           const isSelected = activeTab === tab.id;
-          const activeColor = isSelected ? theme.text : theme.textSecondary;
+          const activeColor = isSelected ? theme.secondary : theme.textMuted;
 
           return (
             <Pressable
@@ -71,8 +99,19 @@ export function DashboardNavBar({
               onPress={() => onTabChange?.(tab.id)}
               style={({ pressed }) => [
                 styles.tabItem,
+                isSelected && styles.tabItemActive,
                 pressed && styles.pressed,
               ]}>
+              {/* Active Tab Top Indicator Bar */}
+              {isSelected ? (
+                <View
+                  style={[
+                    styles.activeIndicator,
+                    { backgroundColor: theme.primary },
+                  ]}
+                />
+              ) : null}
+
               <SymbolView
                 name={tab.icon}
                 size={IconSizes.md}
@@ -86,7 +125,7 @@ export function DashboardNavBar({
                     color: activeColor,
                     fontWeight: isSelected
                       ? FontWeights.bold
-                      : FontWeights.regular,
+                      : FontWeights.medium,
                   },
                 ]}>
                 {tab.label}
@@ -105,7 +144,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderTopWidth: 1,
     paddingTop: Spacing.two,
-    paddingBottom: Spacing.four,
+    paddingBottom: 4,
   },
   navBarContent: {
     width: '100%',
@@ -118,9 +157,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.one,
-    borderRadius: BorderRadii.sm,
-    gap: 4,
+    paddingTop: Spacing.one,
+    paddingBottom: 3,
+    borderRadius: BorderRadii.lg,
+    gap: 3,
+    minWidth: 78,
+    position: 'relative',
+  },
+  tabItemActive: {
+    backgroundColor: 'rgba(15, 61, 58, 0.08)',
+  },
+  activeIndicator: {
+    position: 'absolute',
+    top: -Spacing.two - 1,
+    width: 36,
+    height: 3,
+    borderRadius: BorderRadii.full,
   },
   pressed: {
     opacity: 0.6,

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, type StyleProp, type TextStyle } from 'react-native';
 
-import { BrandColors, FontWeights, Typography } from '@/constants/theme';
+import { BrandColors, Fonts, FontWeights, Typography } from '@/constants/theme';
 
 export type BrandWordmarkProps = {
   style?: StyleProp<TextStyle>;
@@ -25,6 +25,7 @@ export function BrandWordmark({ style, size = 'md' }: BrandWordmarkProps) {
 
 const styles = StyleSheet.create({
   base: {
+    fontFamily: Fonts?.sans,
     fontWeight: FontWeights.bold,
     letterSpacing: -0.2,
   },

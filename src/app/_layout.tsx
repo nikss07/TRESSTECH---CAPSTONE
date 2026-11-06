@@ -1,13 +1,22 @@
-import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
+import { DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { useEffect } from 'react';
+import {
+  useFonts,
+  font42dotSans_300Light,
+  font42dotSans_400Regular,
+  font42dotSans_500Medium,
+  font42dotSans_600SemiBold,
+  font42dotSans_700Bold,
+  font42dotSans_800ExtraBold,
+} from '@expo-google-fonts/42dot-sans';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
 import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 
 SplashScreen.preventAutoHideAsync();
 
-const AppLightTheme = {
+const AppTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
@@ -20,30 +29,36 @@ const AppLightTheme = {
   },
 };
 
-const AppDarkTheme = {
-  ...DarkTheme,
-  colors: {
-    ...DarkTheme.colors,
-    primary: Colors.dark.primary,
-    background: Colors.dark.background,
-    card: Colors.dark.surface,
-    text: Colors.dark.text,
-    border: Colors.dark.border,
-    notification: Colors.dark.primary,
-  },
-};
-
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const [fontsLoaded] = useFonts({
+    '42dotSans_300Light': font42dotSans_300Light,
+    '42dotSans_400Regular': font42dotSans_400Regular,
+    '42dotSans_500Medium': font42dotSans_500Medium,
+    '42dotSans_600SemiBold': font42dotSans_600SemiBold,
+    '42dotSans_700Bold': font42dotSans_700Bold,
+    '42dotSans_800ExtraBold': font42dotSans_800ExtraBold,
+    '42dot Sans': font42dotSans_400Regular,
+  });
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? AppDarkTheme : AppLightTheme}>
+    <ThemeProvider value={AppTheme}>
       <AnimatedSplashOverlay />
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
         <Stack.Screen name="signin" />
         <Stack.Screen name="signup" />
         <Stack.Screen name="dashboard" />
+        <Stack.Screen name="client-list" />
         <Stack.Screen name="new-analysis" />
         <Stack.Screen name="photo-capture" />
         <Stack.Screen name="analysis-progress" />
