@@ -1,5 +1,6 @@
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { SymbolView } from 'expo-symbols';
 import { useState } from 'react';
 import {
   Alert,
@@ -14,6 +15,7 @@ import {
   View,
 } from 'react-native';
 
+import { BrandWordmark } from '@/components/brand-wordmark';
 import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -64,25 +66,47 @@ export default function SignUpScreen() {
           <ScrollView
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}>
-            {/* Top Brand Header Bar */}
+            {/* Top Brand Header Bar (Logo on Left) */}
             <View style={styles.topBrandBar}>
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel="Go back to Home"
-                onPress={() => router.push('/')}
+                accessibilityLabel="TressTech Home"
+                onPress={() => router.replace('/')}
                 style={styles.brandRow}>
                 <Image
                   source={require('@/assets/images/tresstechlogo.png')}
                   style={styles.logoImage}
                   resizeMode="contain"
                 />
-                <ThemedText style={styles.brandTitle}>TressTech</ThemedText>
+                <BrandWordmark style={styles.brandTitle} />
               </Pressable>
             </View>
 
             {/* Elevated Sign-Up Card Container */}
             <View style={styles.cardContainer}>
-              <ThemedText style={styles.overline}>GET STARTED</ThemedText>
+              {/* Card Header with Circle Return Button & Overline */}
+              <View style={styles.cardHeaderRow}>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Return to landing page"
+                  onPress={() => router.replace('/')}
+                  hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                  style={({ pressed }) => [
+                    styles.circleBackButton,
+                    pressed && styles.circleButtonPressed,
+                  ]}>
+                  <SymbolView
+                    name={{
+                      ios: 'chevron.left',
+                      android: 'arrow_back',
+                      web: 'arrow_back',
+                    }}
+                    size={16}
+                    tintColor="#0F3D3A"
+                  />
+                </Pressable>
+                <ThemedText style={styles.overline}>GET STARTED</ThemedText>
+              </View>
 
               <ThemedText style={styles.cardHeading}>
                 Create your TressTech{'\n'}account.
@@ -118,7 +142,7 @@ export default function SignUpScreen() {
                   placeholder="••••••••"
                   value={password}
                   onChangeText={setPassword}
-                  secureTextEntry
+                  isPassword
                   autoCapitalize="none"
                   autoCorrect={false}
                 />
@@ -181,7 +205,28 @@ const styles = StyleSheet.create({
     maxWidth: 420,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'flex-start',
     paddingVertical: Spacing.two,
+  },
+  cardHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two,
+  },
+  circleBackButton: {
+    width: 32,
+    height: 32,
+    borderRadius: BorderRadii.full,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#D8CAB5',
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...(Shadows.sm as object),
+  },
+  circleButtonPressed: {
+    opacity: 0.7,
+    transform: [{ scale: 0.94 }],
   },
   brandRow: {
     flexDirection: 'row',
