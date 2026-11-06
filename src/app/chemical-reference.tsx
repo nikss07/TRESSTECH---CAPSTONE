@@ -1,11 +1,7 @@
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { SymbolView } from 'expo-symbols';
 import { useState } from 'react';
 import {
-  Image,
-  Platform,
-  Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -14,16 +10,13 @@ import {
 
 import { ChemicalReferenceCard } from '@/components/chemical-reference-card';
 import { DashboardNavBar, type DashboardTab } from '@/components/dashboard-nav-bar';
-import { BrandWordmark } from '@/components/brand-wordmark';
+import { DashboardTopNavbar } from '@/components/dashboard-top-navbar';
 import { ThemedText } from '@/components/themed-text';
 import {
-  BorderRadii,
   FontWeights,
-  IconSizes,
   MaxContentWidth,
   Spacing,
   Typography,
-  BrandColors,
 } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -58,39 +51,8 @@ export default function ChemicalReferenceScreen() {
       style={[styles.safeArea, { backgroundColor: theme.background }]}>
       <StatusBar style="dark" />
 
-      {/* Top Navbar Header with Close Button */}
-      <View style={[styles.topNavbar, { backgroundColor: BrandColors.headerBg, borderBottomColor: theme.border }]}>
-        <View style={styles.topNavbarContent}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="TressTech Home"
-            onPress={() => router.push('/dashboard')}
-            style={styles.brandRow}>
-            <Image
-              source={require('@/assets/images/tresstechlogo.png')}
-              style={styles.logoImage}
-              resizeMode="contain"
-            />
-            <BrandWordmark style={styles.brandTitle} />
-          </Pressable>
-
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Close chemical reference"
-            onPress={() => router.push('/dashboard')}
-            style={styles.closeButton}>
-            <SymbolView
-              name={{
-                ios: 'xmark',
-                android: 'close',
-                web: 'close',
-              }}
-              size={IconSizes.md}
-              tintColor={theme.secondary}
-            />
-          </Pressable>
-        </View>
-      </View>
+      {/* Top Navbar Header matching Dashboard */}
+      <DashboardTopNavbar />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -146,37 +108,6 @@ export default function ChemicalReferenceScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-  },
-  topNavbar: {
-    width: '100%',
-    borderBottomWidth: 1,
-    alignItems: 'center',
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Platform.select({ ios: Spacing.two, default: Spacing.two }),
-  },
-  topNavbarContent: {
-    width: '100%',
-    maxWidth: MaxContentWidth,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  brandRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.two,
-  },
-  logoImage: {
-    width: 32,
-    height: 32,
-    borderRadius: BorderRadii.full,
-  },
-  brandTitle: {
-    fontSize: Typography.subtitle.fontSize,
-    fontWeight: FontWeights.bold,
-  },
-  closeButton: {
-    padding: Spacing.one,
   },
   scrollContent: {
     flexGrow: 1,

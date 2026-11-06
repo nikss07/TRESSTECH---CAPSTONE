@@ -1,10 +1,8 @@
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SymbolView } from 'expo-symbols';
 import { useState } from 'react';
 import {
-  Image,
-  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -13,12 +11,12 @@ import {
 } from 'react-native';
 
 import { DashboardNavBar, type DashboardTab } from '@/components/dashboard-nav-bar';
+import { DashboardTopNavbar } from '@/components/dashboard-top-navbar';
 import {
   DashedUploadBox,
   type UploadState,
 } from '@/components/dashed-upload-box';
 import { QualityWarningCard } from '@/components/quality-warning-card';
-import { BrandWordmark } from '@/components/brand-wordmark';
 import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui/button';
 import {
@@ -28,16 +26,20 @@ import {
   MaxContentWidth,
   Spacing,
   Typography,
-  BrandColors,
 } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 export default function PhotoCaptureScreen() {
   const theme = useTheme();
   const router = useRouter();
+  const params = useLocalSearchParams<{ state?: string; clientName?: string }>();
 
   // Support idle, warning (needs refresh), and ready states
-  const [uploadState, setUploadState] = useState<UploadState>('ready');
+  const [uploadState, setUploadState] = useState<UploadState>(() => {
+    if (params.state === 'ready') return 'ready';
+    if (params.state === 'warning') return 'warning';
+    return 'idle';
+  });
   const [activeTab, setActiveTab] = useState<DashboardTab>('home');
 
   const guidanceItems = [
@@ -68,9 +70,13 @@ export default function PhotoCaptureScreen() {
   };
 
   const getOverline = () => {
+    if (uploadState === 'warning') {
+      return 'PHOTO NEEDS A REFRESH';
+    }
+    if (params.clientName) {
+      return `ANALYSIS FOR ${params.clientName.toUpperCase()}`;
+    }
     switch (uploadState) {
-      case 'warning':
-        return 'PHOTO NEEDS A REFRESH';
       case 'ready':
         return 'NEW ANALYSIS';
       case 'idle':
@@ -103,39 +109,8 @@ export default function PhotoCaptureScreen() {
       style={[styles.safeArea, { backgroundColor: theme.background }]}>
       <StatusBar style="dark" />
 
-      {/* Top Header Navbar */}
-      <View style={[styles.topNavbar, { backgroundColor: BrandColors.headerBg, borderBottomColor: theme.border }]}>
-        <View style={styles.topNavbarContent}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="TressTech Home"
-            onPress={() => router.push('/dashboard')}
-            style={styles.brandRow}>
-            <Image
-              source={require('@/assets/images/tresstechlogo.png')}
-              style={styles.logoImage}
-              resizeMode="contain"
-            />
-            <BrandWordmark style={styles.brandTitle} />
-          </Pressable>
-
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Navigation Menu"
-            onPress={() => router.push('/')}
-            style={styles.menuButton}>
-            <SymbolView
-              name={{
-                ios: 'line.3.horizontal',
-                android: 'menu',
-                web: 'menu',
-              }}
-              size={IconSizes.md}
-              tintColor={theme.secondary}
-            />
-          </Pressable>
-        </View>
-      </View>
+      {/* Top Navbar Header without hamburger menu during active analysis process */}
+      <DashboardTopNavbar showMenu={false} />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -326,37 +301,6 @@ export default function PhotoCaptureScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-  },
-  topNavbar: {
-    width: '100%',
-    borderBottomWidth: 1,
-    alignItems: 'center',
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Platform.select({ ios: Spacing.two, default: Spacing.two }),
-  },
-  topNavbarContent: {
-    width: '100%',
-    maxWidth: MaxContentWidth,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  brandRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.two,
-  },
-  logoImage: {
-    width: 32,
-    height: 32,
-    borderRadius: BorderRadii.full,
-  },
-  brandTitle: {
-    fontSize: Typography.subtitle.fontSize,
-    fontWeight: FontWeights.bold,
-  },
-  menuButton: {
-    padding: Spacing.one,
   },
   scrollContent: {
     flexGrow: 1,

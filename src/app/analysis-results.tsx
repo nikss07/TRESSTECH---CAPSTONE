@@ -3,8 +3,6 @@ import { StatusBar } from 'expo-status-bar';
 import { SymbolView } from 'expo-symbols';
 import { useState } from 'react';
 import {
-  Image,
-  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -14,7 +12,7 @@ import {
 
 import { ClassificationCard } from '@/components/classification-card';
 import { DashboardNavBar, type DashboardTab } from '@/components/dashboard-nav-bar';
-import { BrandWordmark } from '@/components/brand-wordmark';
+import { DashboardTopNavbar } from '@/components/dashboard-top-navbar';
 import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui/button';
 import {
@@ -24,7 +22,6 @@ import {
   MaxContentWidth,
   Spacing,
   Typography,
-  BrandColors,
 } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -38,39 +35,8 @@ export default function AnalysisResultsScreen() {
       style={[styles.safeArea, { backgroundColor: theme.background }]}>
       <StatusBar style="dark" />
 
-      {/* Top Navbar Header */}
-      <View style={[styles.topNavbar, { backgroundColor: BrandColors.headerBg, borderBottomColor: theme.border }]}>
-        <View style={styles.topNavbarContent}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="TressTech Home"
-            onPress={() => router.push('/dashboard')}
-            style={styles.brandRow}>
-            <Image
-              source={require('@/assets/images/tresstechlogo.png')}
-              style={styles.logoImage}
-              resizeMode="contain"
-            />
-            <BrandWordmark style={styles.brandTitle} />
-          </Pressable>
-
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Navigation Menu"
-            onPress={() => router.push('/')}
-            style={styles.menuButton}>
-            <SymbolView
-              name={{
-                ios: 'line.3.horizontal',
-                android: 'menu',
-                web: 'menu',
-              }}
-              size={IconSizes.md}
-              tintColor={theme.secondary}
-            />
-          </Pressable>
-        </View>
-      </View>
+      {/* Top Navbar Header without hamburger menu during active analysis process */}
+      <DashboardTopNavbar showMenu={false} />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -171,37 +137,6 @@ export default function AnalysisResultsScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-  },
-  topNavbar: {
-    width: '100%',
-    borderBottomWidth: 1,
-    alignItems: 'center',
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Platform.select({ ios: Spacing.two, default: Spacing.two }),
-  },
-  topNavbarContent: {
-    width: '100%',
-    maxWidth: MaxContentWidth,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  brandRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.two,
-  },
-  logoImage: {
-    width: 32,
-    height: 32,
-    borderRadius: BorderRadii.full,
-  },
-  brandTitle: {
-    fontSize: Typography.subtitle.fontSize,
-    fontWeight: FontWeights.bold,
-  },
-  menuButton: {
-    padding: Spacing.one,
   },
   scrollContent: {
     flexGrow: 1,
