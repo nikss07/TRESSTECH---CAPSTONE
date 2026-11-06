@@ -1,55 +1,110 @@
-import { Image, Pressable, StyleSheet, View } from 'react-native';
+import { FontAwesome6 } from '@expo/vector-icons';
+import { useEffect, useRef, useState } from 'react';
+import {
+  Animated,
+  Easing,
+  Platform,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { BorderRadii, FontWeights, MaxContentWidth, Spacing, Typography } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
+import {
+  BorderRadii,
+  BrandColors,
+  FontWeights,
+  MaxContentWidth,
+  Spacing,
+  Typography,
+} from '@/constants/theme';
 
-export function LandingFooter() {
-  const theme = useTheme();
+export type LandingFooterProps = {
+  visible?: boolean;
+};
+
+export function LandingFooter({ visible = true }: LandingFooterProps) {
+  const [footerAnim] = useState(() => new Animated.Value(0));
+  const hasAnimatedRef = useRef(false);
+
+  useEffect(() => {
+    if (visible && !hasAnimatedRef.current) {
+      hasAnimatedRef.current = true;
+      Animated.timing(footerAnim, {
+        toValue: 1,
+        duration: 450,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: Platform.OS !== 'web',
+      }).start();
+    }
+  }, [footerAnim, visible]);
 
   const links = ['About', 'Features', 'Pricing', 'Contact', 'Privacy Policy'];
-  const socials = ['in', 'ig', 'x'];
+
+  const socials: {
+    id: string;
+    label: string;
+    icon: 'linkedin-in' | 'instagram' | 'x-twitter';
+    size: number;
+  }[] = [
+    { id: 'linkedin', label: 'LinkedIn', icon: 'linkedin-in', size: 15 },
+    { id: 'instagram', label: 'Instagram', icon: 'instagram', size: 15 },
+    { id: 'x', label: 'X (Twitter)', icon: 'x-twitter', size: 14 },
+  ];
 
   return (
-    <View style={[styles.footerContainer, { backgroundColor: theme.secondary }]}>
-      <View style={styles.footerContent}>
-        {/* Brand and Copyright Header */}
+    <View style={styles.footerContainer}>
+      <Animated.View
+        style={[
+          styles.footerContent,
+          {
+            opacity: footerAnim,
+            transform: [
+              {
+                translateY: footerAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [18, 0],
+                }),
+              },
+            ],
+          },
+        ]}>
+        {/* Top Header Row: Brand Title Left, Copyright Right */}
         <View style={styles.brandRow}>
-          <View style={styles.brandLeft}>
-            <Image
-              source={require('@/assets/images/tresstechlogo.png')}
-              style={styles.logoImage}
-              resizeMode="contain"
-            />
-            <ThemedText style={styles.brandTitle}>TressTech</ThemedText>
-          </View>
+          <ThemedText style={styles.brandTitle}>TressTech</ThemedText>
           <ThemedText style={styles.copyrightText}>© 2024</ThemedText>
         </View>
 
-        {/* Navigation Links */}
+        {/* Navigation Links Row */}
         <View style={styles.linksRow}>
           {links.map((link) => (
-            <Pressable key={link} accessibilityRole="button">
+            <Pressable
+              key={link}
+              accessibilityRole="button"
+              accessibilityLabel={link}
+              hitSlop={8}>
               <ThemedText style={styles.linkText}>{link}</ThemedText>
             </Pressable>
           ))}
         </View>
 
-        {/* Social Icons / Chips */}
+        {/* Social Media Icon Circles Row */}
         <View style={styles.socialsRow}>
           {socials.map((social) => (
             <Pressable
-              key={social}
+              key={social.id}
               accessibilityRole="button"
-              style={[
-                styles.socialCircle,
-                { backgroundColor: theme.backgroundElement },
-              ]}>
-              <ThemedText style={styles.socialText}>{social}</ThemedText>
+              accessibilityLabel={social.label}
+              style={styles.socialCircle}>
+              <FontAwesome6
+                name={social.icon}
+                size={social.size}
+                color="#EDE4D6"
+              />
             </Pressable>
           ))}
         </View>
-      </View>
+      </Animated.View>
     </View>
   );
 }
@@ -58,64 +113,55 @@ const styles = StyleSheet.create({
   footerContainer: {
     width: '100%',
     alignItems: 'center',
+    backgroundColor: BrandColors.footerBg, // Deep spruce/forest green #0F3D3A from storyboard
     paddingVertical: Spacing.five,
     paddingHorizontal: Spacing.four,
   },
   footerContent: {
     width: '100%',
     maxWidth: MaxContentWidth,
-    gap: Spacing.four,
+    gap: Spacing.three,
   },
   brandRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-  },
-  brandLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.two,
-  },
-  logoImage: {
-    width: 24,
-    height: 24,
-    borderRadius: BorderRadii.full,
+    width: '100%',
   },
   brandTitle: {
     color: '#EDE4D6',
     fontSize: Typography.bodyLarge.fontSize,
     fontWeight: FontWeights.bold,
+    letterSpacing: -0.2,
   },
   copyrightText: {
-    color: 'rgba(237, 228, 214, 0.7)',
+    color: 'rgba(237, 228, 214, 0.75)',
     fontSize: Typography.caption.fontSize,
+    fontWeight: FontWeights.regular,
   },
   linksRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: Spacing.three,
+    marginTop: Spacing.one,
   },
   linkText: {
     color: 'rgba(237, 228, 214, 0.85)',
-    fontSize: Typography.caption.fontSize,
-    fontWeight: FontWeights.medium,
+    fontSize: Typography.small.fontSize,
+    fontWeight: FontWeights.regular,
   },
   socialsRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.two,
-    marginTop: Spacing.one,
+    marginTop: Spacing.two,
   },
   socialCircle: {
-    width: 30,
-    height: 30,
+    width: 36,
+    height: 36,
     borderRadius: BorderRadii.full,
+    backgroundColor: BrandColors.footerSocialBg, // #2C5552 from storyboard
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  socialText: {
-    color: '#EDE4D6',
-    fontSize: Typography.caption.fontSize,
-    fontWeight: FontWeights.bold,
   },
 });

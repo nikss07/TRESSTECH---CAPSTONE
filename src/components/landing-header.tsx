@@ -3,25 +3,26 @@ import { SymbolView } from 'expo-symbols';
 import { useState } from 'react';
 import {
   Image,
-  Modal,
   Platform,
   Pressable,
-  SafeAreaView,
   StyleSheet,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { BrandWordmark } from '@/components/brand-wordmark';
 import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui/button';
+import { SideDrawer } from '@/components/ui/side-drawer';
 import {
   BorderRadii,
+  BrandColors,
   FontWeights,
   IconSizes,
   MaxContentWidth,
   Spacing,
   Typography,
 } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
 
 export type LandingHeaderProps = {
   onGetStartedPress?: () => void;
@@ -36,9 +37,12 @@ export function LandingHeader({
   onHowItWorksPress,
   onClinicalPress,
 }: LandingHeaderProps) {
-  const theme = useTheme();
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // Moves the header comfortably down below camera punch-holes, notches, and status bars
+  const topPadding = Math.max(insets.top, Platform.OS === 'android' ? 36 : 18) + Spacing.two;
 
   const handleNav = (action?: () => void) => {
     setMenuOpen(false);
@@ -46,7 +50,14 @@ export function LandingHeader({
   };
 
   return (
-    <View style={[styles.headerContainer, { backgroundColor: theme.background }]}>
+    <View
+      style={[
+        styles.headerContainer,
+        {
+          backgroundColor: BrandColors.headerBg,
+          paddingTop: topPadding,
+        },
+      ]}>
       <View style={styles.headerContent}>
         {/* Brand Logo & Name */}
         <Pressable
@@ -58,15 +69,19 @@ export function LandingHeader({
             style={styles.logoImage}
             resizeMode="contain"
           />
-          <ThemedText style={styles.brandTitle}>TressTech</ThemedText>
+          <BrandWordmark style={styles.brandTitle} />
         </Pressable>
 
-        {/* Hamburger Menu Toggle */}
+        {/* Hamburger Menu Toggle with large hit target & visual press feedback */}
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Toggle Navigation Menu"
           onPress={() => setMenuOpen(true)}
-          style={({ pressed }) => [styles.menuButton, pressed && styles.pressed]}>
+          hitSlop={{ top: 16, bottom: 16, left: 16, right: 16 }}
+          style={({ pressed }) => [
+            styles.menuButton,
+            pressed && styles.menuButtonPressed,
+          ]}>
           <SymbolView
             name={{
               ios: 'line.3.horizontal',
@@ -74,96 +89,122 @@ export function LandingHeader({
               web: 'menu',
             }}
             size={IconSizes.md}
-            tintColor={theme.secondary}
+            tintColor={BrandColors.solid}
           />
         </Pressable>
       </View>
 
-      {/* Slide-in Mobile / Web Navigation Modal */}
-      <Modal
-        animationType="fade"
-        transparent
-        visible={menuOpen}
-        onRequestClose={() => setMenuOpen(false)}>
-        <View style={styles.modalOverlay}>
+      {/* Smooth Animated Reusable Side Drawer */}
+      <SideDrawer isOpen={menuOpen} onClose={() => setMenuOpen(false)}>
+        <View style={styles.menuLinks}>
           <Pressable
-            style={StyleSheet.absoluteFill}
-            onPress={() => setMenuOpen(false)}
-          />
+            accessibilityRole="button"
+            accessibilityLabel="Features"
+            style={({ pressed }) => [
+              styles.menuLinkItem,
+              pressed && styles.menuLinkItemPressed,
+            ]}
+            onPress={() => handleNav(onFeaturesPress)}>
+            <ThemedText
+              type="bodyLarge"
+              style={[styles.menuLinkText, { color: BrandColors.solid }]}>
+              Features
+            </ThemedText>
+            <SymbolView
+              name={{
+                ios: 'chevron.right',
+                android: 'chevron_right',
+                web: 'chevron_right',
+              }}
+              size={IconSizes.xs}
+              tintColor="rgba(15, 61, 58, 0.4)"
+            />
+          </Pressable>
 
-          <SafeAreaView
-            style={[styles.menuSheet, { backgroundColor: theme.surface }]}>
-            <View style={styles.menuHeader}>
-              <View style={styles.brandRow}>
-                <Image
-                  source={require('@/assets/images/tresstechlogo.png')}
-                  style={styles.logoImage}
-                  resizeMode="contain"
-                />
-                <ThemedText style={styles.brandTitle}>TressTech</ThemedText>
-              </View>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="How It Works"
+            style={({ pressed }) => [
+              styles.menuLinkItem,
+              pressed && styles.menuLinkItemPressed,
+            ]}
+            onPress={() => handleNav(onHowItWorksPress)}>
+            <ThemedText
+              type="bodyLarge"
+              style={[styles.menuLinkText, { color: BrandColors.solid }]}>
+              How It Works
+            </ThemedText>
+            <SymbolView
+              name={{
+                ios: 'chevron.right',
+                android: 'chevron_right',
+                web: 'chevron_right',
+              }}
+              size={IconSizes.xs}
+              tintColor="rgba(15, 61, 58, 0.4)"
+            />
+          </Pressable>
 
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="Close Menu"
-                onPress={() => setMenuOpen(false)}
-                style={styles.closeButton}>
-                <SymbolView
-                  name={{
-                    ios: 'xmark',
-                    android: 'close',
-                    web: 'close',
-                  }}
-                  size={IconSizes.md}
-                  tintColor={theme.secondary}
-                />
-              </Pressable>
-            </View>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Clinical Credibility"
+            style={({ pressed }) => [
+              styles.menuLinkItem,
+              pressed && styles.menuLinkItemPressed,
+            ]}
+            onPress={() => handleNav(onClinicalPress)}>
+            <ThemedText
+              type="bodyLarge"
+              style={[styles.menuLinkText, { color: BrandColors.solid }]}>
+              Clinical Credibility
+            </ThemedText>
+            <SymbolView
+              name={{
+                ios: 'chevron.right',
+                android: 'chevron_right',
+                web: 'chevron_right',
+              }}
+              size={IconSizes.xs}
+              tintColor="rgba(15, 61, 58, 0.4)"
+            />
+          </Pressable>
 
-            <View style={styles.menuLinks}>
-              <Pressable
-                style={styles.menuLinkItem}
-                onPress={() => handleNav(onFeaturesPress)}>
-                <ThemedText type="bodyLarge" style={styles.menuLinkText}>
-                  Features
-                </ThemedText>
-              </Pressable>
-              <Pressable
-                style={styles.menuLinkItem}
-                onPress={() => handleNav(onHowItWorksPress)}>
-                <ThemedText type="bodyLarge" style={styles.menuLinkText}>
-                  How It Works
-                </ThemedText>
-              </Pressable>
-              <Pressable
-                style={styles.menuLinkItem}
-                onPress={() => handleNav(onClinicalPress)}>
-                <ThemedText type="bodyLarge" style={styles.menuLinkText}>
-                  Clinical Credibility
-                </ThemedText>
-              </Pressable>
-              <Pressable
-                style={styles.menuLinkItem}
-                onPress={() => {
-                  setMenuOpen(false);
-                  router.push('/dashboard');
-                }}>
-                <ThemedText type="bodyLarge" style={[styles.menuLinkText, { color: theme.primary }]}>
-                  Staff Dashboard
-                </ThemedText>
-              </Pressable>
-            </View>
-
-            <View style={styles.menuFooter}>
-              <Button
-                title="Get Started"
-                fullWidth
-                onPress={() => handleNav(onGetStartedPress)}
-              />
-            </View>
-          </SafeAreaView>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Staff Dashboard"
+            style={({ pressed }) => [
+              styles.menuLinkItem,
+              pressed && styles.menuLinkItemPressed,
+            ]}
+            onPress={() => {
+              setMenuOpen(false);
+              router.push('/dashboard');
+            }}>
+            <ThemedText
+              type="bodyLarge"
+              style={[styles.menuLinkText, { color: '#AF8436' }]}>
+              Staff Dashboard
+            </ThemedText>
+            <SymbolView
+              name={{
+                ios: 'chevron.right',
+                android: 'chevron_right',
+                web: 'chevron_right',
+              }}
+              size={IconSizes.xs}
+              tintColor="#AF8436"
+            />
+          </Pressable>
         </View>
-      </Modal>
+
+        <View style={styles.menuFooter}>
+          <Button
+            title="Get Started"
+            fullWidth
+            onPress={() => handleNav(onGetStartedPress)}
+          />
+        </View>
+      </SideDrawer>
     </View>
   );
 }
@@ -172,7 +213,6 @@ const styles = StyleSheet.create({
   headerContainer: {
     width: '100%',
     paddingHorizontal: Spacing.four,
-    paddingTop: Platform.select({ ios: Spacing.two, default: Spacing.three }),
     paddingBottom: Spacing.two,
     alignItems: 'center',
     zIndex: 10,
@@ -200,44 +240,32 @@ const styles = StyleSheet.create({
     fontWeight: FontWeights.bold,
   },
   menuButton: {
-    padding: Spacing.one,
+    width: 44,
+    height: 44,
+    borderRadius: BorderRadii.full,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  pressed: {
-    opacity: 0.6,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(15, 61, 58, 0.45)',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-end',
-  },
-  menuSheet: {
-    width: '80%',
-    maxWidth: 320,
-    height: '100%',
-    padding: Spacing.four,
-    justifyContent: 'space-between',
-  },
-  menuHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingBottom: Spacing.three,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#D8CAB5',
-  },
-  closeButton: {
-    padding: Spacing.one,
+  menuButtonPressed: {
+    backgroundColor: 'rgba(15, 61, 58, 0.12)', // Visual tap feedback indicator
+    transform: [{ scale: 0.92 }],
   },
   menuLinks: {
     flex: 1,
-    paddingTop: Spacing.five,
-    gap: Spacing.four,
+    paddingTop: Spacing.four,
+    gap: Spacing.two,
   },
   menuLinkItem: {
-    paddingVertical: Spacing.two,
+    paddingVertical: Spacing.three,
+    paddingHorizontal: Spacing.three,
+    borderRadius: BorderRadii.md,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  menuLinkItemPressed: {
+    backgroundColor: 'rgba(15, 61, 58, 0.12)', // Visual tap feedback indicator
+    transform: [{ scale: 0.98 }],
   },
   menuLinkText: {
     fontWeight: FontWeights.semiBold,
