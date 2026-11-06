@@ -1,10 +1,9 @@
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SymbolView } from 'expo-symbols';
 import { useState } from 'react';
 import {
-  Image,
-  Platform,
+  Modal,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -14,7 +13,7 @@ import {
 
 import { ClientHistoryItem } from '@/components/client-history-item';
 import { DashboardNavBar, type DashboardTab } from '@/components/dashboard-nav-bar';
-import { BrandWordmark } from '@/components/brand-wordmark';
+import { DashboardTopNavbar } from '@/components/dashboard-top-navbar';
 import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,38 +21,82 @@ import {
   FontWeights,
   IconSizes,
   MaxContentWidth,
+  Shadows,
   Spacing,
   Typography,
-  BrandColors,
 } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 export default function ClientProfileScreen() {
   const theme = useTheme();
   const router = useRouter();
+  const params = useLocalSearchParams<{ name?: string; email?: string }>();
   const [activeTab, setActiveTab] = useState<DashboardTab>('home');
 
-  const historyRecords = [
+  const clientName = params.name || 'Junaica';
+  const clientInitial = clientName.charAt(0).toUpperCase();
+  const clientHandle =
+    params.email ||
+    (params.name
+      ? `${params.name.toLowerCase().replace(/\s+/g, '.')}@example.com`
+      : 'niksmapagmahal');
+
+  const handleReturn = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.push('/dashboard');
+    }
+  };
+
+  type AnalysisHistoryRecord = {
+    id: string;
+    date: string;
+    fullDate: string;
+    condition: string;
+    porosity: string;
+    score: string;
+    recommendation: string;
+    followUpFlag: string;
+    notes?: string;
+  };
+
+  const [selectedRecord, setSelectedRecord] =
+    useState<AnalysisHistoryRecord | null>(null);
+
+  const historyRecords: AnalysisHistoryRecord[] = [
     {
       id: 'rec-1',
       date: 'Today',
+      fullDate: 'Today · Oct 24, 2026',
       condition: 'Normal condition',
       porosity: 'Medium porosity',
       score: '84/100',
+      recommendation: 'Proceed with standard formula · 6% / 20 vol',
+      followUpFlag: 'Normal maintenance schedule',
+      notes: 'Hair cortex in healthy state. Minimal cuticular lifting detected.',
     },
     {
       id: 'rec-2',
       date: 'Jun 08',
+      fullDate: 'Jun 08, 2026',
       condition: 'Mild damage',
       porosity: 'Medium porosity',
-      score: '84/100',
+      score: '78/100',
+      recommendation: 'Proceed with caution · 6% / 20 vol with bond protector',
+      followUpFlag: 'Recheck after next chemical service',
+      notes: 'Slight cuticle porosity variation at mid-lengths and ends.',
     },
     {
       id: 'rec-3',
       date: 'May 12',
+      fullDate: 'May 12, 2026',
       condition: 'Colored',
-      porosity: 'Medium porosity',
-      score: '84/100',
+      porosity: 'High porosity',
+      score: '72/100',
+      recommendation: 'Pre-treat with protein filler · Gentle 3% / 10 vol',
+      followUpFlag: 'High sensitivity — recurrent exposure',
+      notes: 'Prior chemical bleaching identified. Requires moisture sealant.',
     },
   ];
 
@@ -62,50 +105,19 @@ export default function ClientProfileScreen() {
       style={[styles.safeArea, { backgroundColor: theme.background }]}>
       <StatusBar style="dark" />
 
-      {/* Top Navbar Header */}
-      <View style={[styles.topNavbar, { backgroundColor: BrandColors.headerBg, borderBottomColor: theme.border }]}>
-        <View style={styles.topNavbarContent}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="TressTech Home"
-            onPress={() => router.push('/dashboard')}
-            style={styles.brandRow}>
-            <Image
-              source={require('@/assets/images/tresstechlogo.png')}
-              style={styles.logoImage}
-              resizeMode="contain"
-            />
-            <BrandWordmark style={styles.brandTitle} />
-          </Pressable>
-
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Navigation Menu"
-            onPress={() => router.push('/')}
-            style={styles.menuButton}>
-            <SymbolView
-              name={{
-                ios: 'line.3.horizontal',
-                android: 'menu',
-                web: 'menu',
-              }}
-              size={IconSizes.md}
-              tintColor={theme.secondary}
-            />
-          </Pressable>
-        </View>
-      </View>
+      {/* Top Navbar Header matching Dashboard */}
+      <DashboardTopNavbar />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}>
         <View style={styles.contentWrapper}>
-          {/* Back Navigation Link */}
+          {/* Return Navigation Link */}
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Back to clients"
-            onPress={() => router.push('/dashboard')}
-            style={styles.backRow}>
+            accessibilityLabel="Return to previous screen"
+            onPress={handleReturn}
+            style={({ pressed }) => [styles.backRow, pressed && styles.pressed]}>
             <SymbolView
               name={{
                 ios: 'arrow.left',
@@ -113,10 +125,10 @@ export default function ClientProfileScreen() {
                 web: 'arrow_back',
               }}
               size={IconSizes.sm}
-              tintColor={theme.text}
+              tintColor={theme.secondary}
             />
-            <ThemedText style={[styles.backText, { color: theme.text }]}>
-              Clients
+            <ThemedText style={[styles.backText, { color: theme.secondary }]}>
+              Return
             </ThemedText>
           </Pressable>
 
@@ -129,7 +141,7 @@ export default function ClientProfileScreen() {
               ]}>
               <ThemedText
                 style={[styles.avatarText, { color: theme.secondaryText }]}>
-                J
+                {clientInitial}
               </ThemedText>
             </View>
 
@@ -138,11 +150,11 @@ export default function ClientProfileScreen() {
                 CLIENT PROFILE
               </ThemedText>
               <ThemedText style={[styles.profileName, { color: theme.text }]}>
-                Junaica
+                {clientName}
               </ThemedText>
               <ThemedText
                 style={[styles.profileHandle, { color: theme.textSecondary }]}>
-                niksmapagmahal
+                {clientHandle}
               </ThemedText>
             </View>
           </View>
@@ -193,7 +205,7 @@ export default function ClientProfileScreen() {
                 condition={rec.condition}
                 porosity={rec.porosity}
                 score={rec.score}
-                onPress={() => router.push('/analysis-results')}
+                onPress={() => setSelectedRecord(rec)}
               />
             ))}
           </View>
@@ -204,12 +216,176 @@ export default function ClientProfileScreen() {
             variant="primary"
             size="lg"
             fullWidth
-            onPress={() => router.push('/new-analysis')}
+            onPress={() =>
+              router.push({
+                pathname: '/new-analysis',
+                params: {
+                  selectedClientName: clientName,
+                  selectedClientEmail: clientHandle,
+                },
+              })
+            }
             style={styles.actionButton}
             textStyle={styles.actionButtonText}
           />
         </View>
       </ScrollView>
+
+      {/* Analysis History Record Detail Modal */}
+      <Modal
+        visible={Boolean(selectedRecord)}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setSelectedRecord(null)}>
+        <View style={styles.modalOverlay}>
+          <Pressable
+            style={StyleSheet.absoluteFill}
+            onPress={() => setSelectedRecord(null)}
+          />
+
+          <View
+            style={[
+              styles.modalCard,
+              { backgroundColor: theme.card, borderColor: theme.borderSubtle },
+            ]}>
+            {/* Modal Header */}
+            <View style={styles.modalHeader}>
+              <View style={styles.modalHeaderTitleBlock}>
+                <ThemedText
+                  style={[styles.modalOverline, { color: theme.primary }]}>
+                  ANALYSIS RECORD
+                </ThemedText>
+                <ThemedText style={[styles.modalTitle, { color: theme.text }]}>
+                  {selectedRecord?.condition}
+                </ThemedText>
+                <ThemedText
+                  style={[
+                    styles.modalSubtitle,
+                    { color: theme.textSecondary },
+                  ]}>
+                  {selectedRecord?.fullDate}
+                </ThemedText>
+              </View>
+
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Close analysis details"
+                onPress={() => setSelectedRecord(null)}
+                style={styles.modalCloseBtn}>
+                <SymbolView
+                  name={{ ios: 'xmark', android: 'close', web: 'close' }}
+                  size={IconSizes.sm}
+                  tintColor={theme.secondary}
+                />
+              </Pressable>
+            </View>
+
+            {/* Modal Detail Content */}
+            {selectedRecord && (
+              <View style={styles.modalBody}>
+                {/* Porosity & Health Score Metric Box */}
+                <View
+                  style={[
+                    styles.metricBanner,
+                    {
+                      backgroundColor: theme.surfaceSecondary,
+                      borderColor: theme.borderSubtle,
+                    },
+                  ]}>
+                  <View style={styles.metricItem}>
+                    <ThemedText
+                      style={[
+                        styles.metricLabel,
+                        { color: theme.textSecondary },
+                      ]}>
+                      POROSITY
+                    </ThemedText>
+                    <ThemedText
+                      style={[styles.metricValue, { color: theme.text }]}>
+                      {selectedRecord.porosity}
+                    </ThemedText>
+                  </View>
+
+                  <View
+                    style={[
+                      styles.metricDivider,
+                      { backgroundColor: theme.border },
+                    ]}
+                  />
+
+                  <View style={styles.metricItem}>
+                    <ThemedText
+                      style={[
+                        styles.metricLabel,
+                        { color: theme.textSecondary },
+                      ]}>
+                      SCORE
+                    </ThemedText>
+                    <ThemedText
+                      style={[styles.metricValue, { color: theme.text }]}>
+                      {selectedRecord.score}
+                    </ThemedText>
+                  </View>
+                </View>
+
+                {/* Follow-up Flag Box */}
+                <View style={styles.detailBlock}>
+                  <ThemedText
+                    style={[styles.detailLabel, { color: theme.textMuted }]}>
+                    FOLLOW-UP FLAG
+                  </ThemedText>
+                  <ThemedText
+                    style={[styles.detailFlag, { color: theme.primaryDark }]}>
+                    {selectedRecord.followUpFlag}
+                  </ThemedText>
+                </View>
+
+                {/* Recommendation Box */}
+                <View style={styles.detailBlock}>
+                  <ThemedText
+                    style={[styles.detailLabel, { color: theme.textMuted }]}>
+                    RECOMMENDATION
+                  </ThemedText>
+                  <ThemedText
+                    style={[styles.detailText, { color: theme.text }]}>
+                    {selectedRecord.recommendation}
+                  </ThemedText>
+                </View>
+
+                {/* Observations */}
+                {selectedRecord.notes && (
+                  <View style={styles.detailBlock}>
+                    <ThemedText
+                      style={[styles.detailLabel, { color: theme.textMuted }]}>
+                      OBSERVATIONS
+                    </ThemedText>
+                    <ThemedText
+                      style={[
+                        styles.detailNotes,
+                        { color: theme.textSecondary },
+                      ]}>
+                      {selectedRecord.notes}
+                    </ThemedText>
+                  </View>
+                )}
+
+                {/* Action Button */}
+                <View style={styles.modalActions}>
+                  <Button
+                    title="Close"
+                    variant="primary"
+                    size="lg"
+                    fullWidth
+                    onPress={() => setSelectedRecord(null)}
+                    style={styles.modalPrimaryBtn}
+                    textStyle={styles.modalPrimaryBtnText}
+                  />
+                </View>
+              </View>
+            )}
+          </View>
+        </View>
+      </Modal>
 
       {/* Fixed Bottom Staff Navigation Bar */}
       <DashboardNavBar
@@ -231,37 +407,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
-  topNavbar: {
-    width: '100%',
-    borderBottomWidth: 1,
-    alignItems: 'center',
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Platform.select({ ios: Spacing.two, default: Spacing.two }),
-  },
-  topNavbarContent: {
-    width: '100%',
-    maxWidth: MaxContentWidth,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  brandRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.two,
-  },
-  logoImage: {
-    width: 32,
-    height: 32,
-    borderRadius: BorderRadii.full,
-  },
-  brandTitle: {
-    fontSize: Typography.subtitle.fontSize,
-    fontWeight: FontWeights.bold,
-  },
-  menuButton: {
-    padding: Spacing.one,
-  },
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: Spacing.four,
@@ -279,10 +424,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: Spacing.two,
     alignSelf: 'flex-start',
+    paddingVertical: Spacing.one,
+  },
+  pressed: {
+    opacity: 0.7,
   },
   backText: {
     fontSize: Typography.body.fontSize,
-    fontWeight: FontWeights.medium,
+    fontWeight: FontWeights.semiBold,
   },
   profileHeader: {
     flexDirection: 'row',
@@ -368,6 +517,111 @@ const styles = StyleSheet.create({
     marginTop: Spacing.two,
   },
   actionButtonText: {
+    fontSize: Typography.body.fontSize,
+    fontWeight: FontWeights.semiBold,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(15, 61, 58, 0.55)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: Spacing.four,
+  },
+  modalCard: {
+    width: '100%',
+    maxWidth: 420,
+    borderRadius: BorderRadii.xl,
+    borderWidth: 1,
+    padding: Spacing.five,
+    gap: Spacing.four,
+    ...(Shadows.md as object),
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+  },
+  modalHeaderTitleBlock: {
+    gap: 2,
+    flex: 1,
+  },
+  modalOverline: {
+    fontSize: 11,
+    fontWeight: FontWeights.bold,
+    letterSpacing: 1.1,
+    textTransform: 'uppercase',
+  },
+  modalTitle: {
+    fontSize: 22,
+    fontWeight: FontWeights.bold,
+  },
+  modalSubtitle: {
+    fontSize: Typography.small.fontSize,
+  },
+  modalCloseBtn: {
+    padding: Spacing.one,
+  },
+  modalBody: {
+    gap: Spacing.four,
+  },
+  metricBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    paddingVertical: Spacing.three,
+    paddingHorizontal: Spacing.two,
+    borderRadius: BorderRadii.lg,
+    borderWidth: 1,
+  },
+  metricItem: {
+    alignItems: 'center',
+    gap: 2,
+    flex: 1,
+  },
+  metricDivider: {
+    width: 1,
+    height: 32,
+  },
+  metricLabel: {
+    fontSize: 10.5,
+    fontWeight: FontWeights.bold,
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+  },
+  metricValue: {
+    fontSize: Typography.body.fontSize,
+    fontWeight: FontWeights.bold,
+  },
+  detailBlock: {
+    gap: Spacing.one,
+  },
+  detailLabel: {
+    fontSize: 10.5,
+    fontWeight: FontWeights.bold,
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+  },
+  detailFlag: {
+    fontSize: Typography.body.fontSize,
+    fontWeight: FontWeights.bold,
+  },
+  detailText: {
+    fontSize: Typography.body.fontSize,
+    fontWeight: FontWeights.medium,
+  },
+  detailNotes: {
+    fontSize: Typography.small.fontSize,
+    lineHeight: 20,
+  },
+  modalActions: {
+    gap: Spacing.two,
+    marginTop: Spacing.two,
+  },
+  modalPrimaryBtn: {
+    borderRadius: BorderRadii.pill,
+    height: 50,
+  },
+  modalPrimaryBtnText: {
     fontSize: Typography.body.fontSize,
     fontWeight: FontWeights.semiBold,
   },
