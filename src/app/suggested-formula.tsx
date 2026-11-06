@@ -14,6 +14,7 @@ import {
 
 import { DashboardNavBar, type DashboardTab } from '@/components/dashboard-nav-bar';
 import { FormulaMetricCard } from '@/components/formula-metric-card';
+import { BrandWordmark } from '@/components/brand-wordmark';
 import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui/button';
 import { VerdictCard } from '@/components/verdict-card';
@@ -24,6 +25,7 @@ import {
   MaxContentWidth,
   Spacing,
   Typography,
+  BrandColors,
 } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -42,7 +44,7 @@ export default function SuggestedFormulaScreen() {
       <StatusBar style="dark" />
 
       {/* Top Navbar Header */}
-      <View style={[styles.topNavbar, { borderBottomColor: theme.border }]}>
+      <View style={[styles.topNavbar, { backgroundColor: BrandColors.headerBg, borderBottomColor: theme.border }]}>
         <View style={styles.topNavbarContent}>
           <Pressable
             accessibilityRole="button"
@@ -54,9 +56,7 @@ export default function SuggestedFormulaScreen() {
               style={styles.logoImage}
               resizeMode="contain"
             />
-            <ThemedText style={[styles.brandTitle, { color: theme.text }]}>
-              TressTech
-            </ThemedText>
+            <BrandWordmark style={styles.brandTitle} />
           </Pressable>
 
           <Pressable

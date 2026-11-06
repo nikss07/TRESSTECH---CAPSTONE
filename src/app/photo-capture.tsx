@@ -18,6 +18,7 @@ import {
   type UploadState,
 } from '@/components/dashed-upload-box';
 import { QualityWarningCard } from '@/components/quality-warning-card';
+import { BrandWordmark } from '@/components/brand-wordmark';
 import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui/button';
 import {
@@ -27,6 +28,7 @@ import {
   MaxContentWidth,
   Spacing,
   Typography,
+  BrandColors,
 } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -102,7 +104,7 @@ export default function PhotoCaptureScreen() {
       <StatusBar style="dark" />
 
       {/* Top Header Navbar */}
-      <View style={[styles.topNavbar, { borderBottomColor: theme.border }]}>
+      <View style={[styles.topNavbar, { backgroundColor: BrandColors.headerBg, borderBottomColor: theme.border }]}>
         <View style={styles.topNavbarContent}>
           <Pressable
             accessibilityRole="button"
@@ -114,9 +116,7 @@ export default function PhotoCaptureScreen() {
               style={styles.logoImage}
               resizeMode="contain"
             />
-            <ThemedText style={[styles.brandTitle, { color: theme.text }]}>
-              TressTech
-            </ThemedText>
+            <BrandWordmark style={styles.brandTitle} />
           </Pressable>
 
           <Pressable

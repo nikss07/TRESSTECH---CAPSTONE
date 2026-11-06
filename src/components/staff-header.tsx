@@ -1,9 +1,11 @@
 import { SymbolView } from 'expo-symbols';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
 
+import { BrandWordmark } from '@/components/brand-wordmark';
 import { ThemedText } from '@/components/themed-text';
 import {
   BorderRadii,
+  BrandColors,
   FontWeights,
   IconSizes,
   Spacing,
@@ -36,9 +38,7 @@ export function StaffHeader({
             style={styles.logoImage}
             resizeMode="contain"
           />
-          <ThemedText style={[styles.brandTitle, { color: theme.text }]}>
-            TressTech
-          </ThemedText>
+          <BrandWordmark style={styles.brandTitle} />
         </View>
 
         <Pressable
@@ -53,7 +53,7 @@ export function StaffHeader({
               web: 'menu',
             }}
             size={IconSizes.md}
-            tintColor={theme.secondary}
+            tintColor={BrandColors.solid}
           />
         </Pressable>
       </View>

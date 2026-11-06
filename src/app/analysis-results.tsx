@@ -14,6 +14,7 @@ import {
 
 import { ClassificationCard } from '@/components/classification-card';
 import { DashboardNavBar, type DashboardTab } from '@/components/dashboard-nav-bar';
+import { BrandWordmark } from '@/components/brand-wordmark';
 import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui/button';
 import {
@@ -23,6 +24,7 @@ import {
   MaxContentWidth,
   Spacing,
   Typography,
+  BrandColors,
 } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -37,7 +39,7 @@ export default function AnalysisResultsScreen() {
       <StatusBar style="dark" />
 
       {/* Top Navbar Header */}
-      <View style={[styles.topNavbar, { borderBottomColor: theme.border }]}>
+      <View style={[styles.topNavbar, { backgroundColor: BrandColors.headerBg, borderBottomColor: theme.border }]}>
         <View style={styles.topNavbarContent}>
           <Pressable
             accessibilityRole="button"
@@ -49,9 +51,7 @@ export default function AnalysisResultsScreen() {
               style={styles.logoImage}
               resizeMode="contain"
             />
-            <ThemedText style={[styles.brandTitle, { color: theme.text }]}>
-              TressTech
-            </ThemedText>
+            <BrandWordmark style={styles.brandTitle} />
           </Pressable>
 
           <Pressable
