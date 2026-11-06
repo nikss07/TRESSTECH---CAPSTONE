@@ -13,6 +13,7 @@ import {
 import {
   BorderRadii,
   Dimensions,
+  Fonts,
   FontWeights,
   Shadows,
   Spacing,
@@ -193,6 +194,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   textBase: {
+    fontFamily: Fonts?.sans,
     fontWeight: FontWeights.semiBold,
     textAlign: 'center',
   },

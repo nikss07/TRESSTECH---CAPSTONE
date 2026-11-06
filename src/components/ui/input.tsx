@@ -14,6 +14,7 @@ import {
 import {
   BorderRadii,
   Dimensions,
+  Fonts,
   FontWeights,
   Spacing,
   Typography,
@@ -129,6 +130,7 @@ const styles = StyleSheet.create({
     gap: Spacing.one,
   },
   label: {
+    fontFamily: Fonts?.sans,
     color: '#0F3D3A', // High contrast brand spruce green
     fontSize: Typography.small.fontSize,
     fontWeight: FontWeights.semiBold,
@@ -144,6 +146,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
   },
   input: {
+    fontFamily: Fonts?.sans,
     flex: 1,
     height: '100%',
     color: '#0F3D3A', // High contrast dark text on white input background

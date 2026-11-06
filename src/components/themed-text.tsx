@@ -27,7 +27,7 @@ export function ThemedText({ style, type = 'default', themeColor, ...rest }: The
   // If linkPrimary is selected without an explicit themeColor, use the brand primary color (#CC9F4D)
   const defaultColor = type === 'linkPrimary' ? theme.primary : theme[themeColor ?? 'text'];
 
-  return <Text style={[{ color: defaultColor }, styles[type], style]} {...rest} />;
+  return <Text style={[{ color: defaultColor, fontFamily: Fonts?.sans }, styles[type], style]} {...rest} />;
 }
 
 const styles = StyleSheet.create({
