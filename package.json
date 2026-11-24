@@ -6,6 +6,7 @@
     "@expo-google-fonts/42dot-sans": "^0.4.0",
     "@expo/ui": "~58.0.27",
     "@expo/vector-icons": "^15.0.2",
+    "dotenv": "^18.0.10",
     "eslint-config-expo": "~58.0.4",
     "expo": "~58.0.23",
     "expo-camera": "~58.0.14",
@@ -47,9 +48,9 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "migrate:create": "node-pg-migrate create",
-    "migrate": "node --env-file=.env ./node_modules/node-pg-migrate/bin/node-pg-migrate.js up",
-    "migrate:down": "node --env-file=.env ./node_modules/node-pg-migrate/bin/node-pg-migrate.js down",
+    "migrate:create": "node-pg-migrate create --migrations-dir backend/migrations",
+    "migrate": "node --env-file=.env ./node_modules/node-pg-migrate/bin/node-pg-migrate.js up --migrations-dir backend/migrations",
+    "migrate:down": "node --env-file=.env ./node_modules/node-pg-migrate/bin/node-pg-migrate.js down --migrations-dir backend/migrations",
     "db:create": "node --env-file=.env --experimental-strip-types src/lib/create_database.ts"
   },
   "private": true

@@ -10,7 +10,7 @@ The project currently provides a user-interface prototype. Dashboard records, re
 - Client selection and sample client creation for a new consultation.
 - Camera capture and photo-library upload flows, including image-quality checks.
 - Hair-profile and desired-color screens, with example formula and aftercare guidance.
-- PostgreSQL schema migrations for users, clients, hair analyses, treatment records, chemical-safety references, and recommendations.
+- PostgreSQL schema migrations in `backend/migrations/` for users, clients, hair analyses, treatment records, chemical-safety references, and recommendations.
 - Android, iOS, and web targets powered by Expo.
 
 ## Technology
@@ -50,7 +50,7 @@ The project currently provides a user-interface prototype. Dashboard records, re
    npm run migrate
    ```
 
-   `db:create` connects to the PostgreSQL maintenance database named `postgres`, using the host and credentials from `DATABASE_URL`. The database role must be allowed to create databases. If your provider does not allow creating databases through this connection, create the database through the provider's tools, then run `npm run migrate`.
+   `db:create` connects to the PostgreSQL maintenance database named `postgres`, using the host and credentials from `DATABASE_URL`. The database role must be allowed to create databases. If your provider does not allow creating databases through this connection, create the database through the provider's tools, then run `npm run migrate`. Migration files are stored in `backend/migrations/`.
 
 4. Start the app:
 
@@ -75,7 +75,7 @@ Database setup is needed for the PostgreSQL schema and migration workflow; the c
 | `npm run db:create` | Create the database named by `DB_NAME` or the database path in `DATABASE_URL`. Does nothing if it already exists. |
 | `npm run migrate` | Apply pending migrations. |
 | `npm run migrate:down` | Roll back the most recently applied migration. Use with care. |
-| `npm run migrate:create -- <migration-name>` | Generate a migration file. |
+| `npm run migrate:create -- <migration-name>` | Generate a migration file in `backend/migrations/`. |
 
 ## Quality checks
 
@@ -88,7 +88,8 @@ npx tsc --noEmit
 
 ```text
 assets/       App images, icons, and other static assets
-migrations/   PostgreSQL schema migrations
+backend/
+  migrations/ PostgreSQL schema migrations
 src/
   app/        Expo Router routes and screens
   components/ Reusable UI and feature components
