@@ -8,7 +8,7 @@ if (!connectionString) {
 
 const targetUrl = new URL(connectionString);
 const databaseName =
-  process.env.DB_NAME || decodeURIComponent(targetUrl.pathname.slice(1)); // Use the path as the database name if DB_NAME is not set
+  process.env.DB_NAME || decodeURIComponent(targetUrl.pathname.slice(1));
 if (!databaseName) {
   throw new Error('DATABASE_URL must include a target database name.');
 }

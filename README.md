@@ -21,29 +21,31 @@ The project currently provides a user-interface prototype. Dashboard records, re
 
 ## Prerequisites
 
-- Node.js 22.13 or a later Node.js release supported by the installed Expo SDK. The `db:create` script also uses Node's built-in TypeScript type stripping.
+- Node.js 22.13 or a later Node.js release supported by the installed Expo SDK. The backend database-creation script uses Node's built-in TypeScript type stripping.
 - npm
 - A PostgreSQL server and a database role with permission to create databases, if you plan to initialize the database locally.
 - Android Studio for an Android emulator, or macOS with Xcode for an iOS simulator. You can also run the web target.
 
 ## Getting started
 
-1. Install the project dependencies:
+1. Install the mobile app dependencies from the repository root:
 
    ```bash
    npm install
    ```
 
-2. Configure the root `.env` file for the database workflow. Set `DATABASE_URL` to a PostgreSQL connection string whose path is the target database name. `DB_NAME` is optional; when set, use the same database name as the URL path.
+2. Install the backend dependencies:
 
-   ```dotenv
-   DATABASE_URL=postgresql://postgres:your_password@localhost:5432/tresstech
-   DB_NAME=tresstech
+   ```bash
+   cd backend
+   npm install
    ```
 
-   Replace the example credentials and host with your own PostgreSQL settings. Do not commit real credentials. Keep database credentials out of client-side application code and public environment variables.
+3. Configure `backend/.env`. Start from `backend/.env.example` and set `DATABASE_URL` to a PostgreSQL connection string whose path is the target database name. `DB_NAME` is optional; when set, it must match the database name in the URL.
 
-3. If you are setting up the database, create it and apply the schema:
+   Replace the example credentials and host with your own PostgreSQL settings. The backend `.env` file is ignored by Git; do not commit real credentials.
+
+4. If you are setting up the database, create it and apply the schema from the `backend` directory:
 
    ```bash
    npm run db:create
@@ -52,9 +54,10 @@ The project currently provides a user-interface prototype. Dashboard records, re
 
    `db:create` connects to the PostgreSQL maintenance database named `postgres`, using the host and credentials from `DATABASE_URL`. The database role must be allowed to create databases. If your provider does not allow creating databases through this connection, create the database through the provider's tools, then run `npm run migrate`. Migration files are stored in `backend/migrations/`.
 
-4. Start the app:
+5. Return to the repository root and start the mobile app:
 
    ```bash
+   cd ..
    npm start
    ```
 
@@ -68,7 +71,9 @@ The project currently provides a user-interface prototype. Dashboard records, re
 
 Database setup is needed for the PostgreSQL schema and migration workflow; the current sample UI can be explored independently of persisted database records.
 
-## Database commands
+## Backend database commands
+
+Run these commands from the `backend` directory.
 
 | Command | Description |
 | --- | --- |
@@ -89,6 +94,10 @@ npx tsc --noEmit
 ```text
 assets/       App images, icons, and other static assets
 backend/
+  .env.example  Backend environment variable template
+  create_database.ts Database creation utility
+  package.json Backend scripts and dependencies
+  package-lock.json Locked backend dependencies
   migrations/ PostgreSQL schema migrations
 src/
   app/        Expo Router routes and screens

@@ -1,0 +1,25 @@
+{
+  "name": "tresstech-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "db:create": "node --env-file=.env --experimental-strip-types create_database.ts",
+    "migrate:create": "node-pg-migrate create --migrations-dir migrations",
+    "migrate": "node --env-file=.env ./node_modules/node-pg-migrate/bin/node-pg-migrate.js up --migrations-dir migrations",
+    "migrate:down": "node --env-file=.env ./node_modules/node-pg-migrate/bin/node-pg-migrate.js down --migrations-dir migrations",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.3.0",
+    "node-pg-migrate": "^9.0.0",
+    "pg": "^8.23.1"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}
