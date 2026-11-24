@@ -82,6 +82,23 @@ Run these commands from the `backend` directory.
 | `npm run migrate:down` | Roll back the most recently applied migration. Use with care. |
 | `npm run migrate:create -- <migration-name>` | Generate a migration file in `backend/migrations/`. |
 
+## Backend API structure
+
+The backend uses Express with a layered structure. Start it from the `backend` directory with `npm start`. The database-backed health endpoint is available at `GET http://localhost:3000/api/v1/health`.
+
+- `src/routes/` maps HTTP paths and methods to controllers.
+- `src/controllers/` handles HTTP input and response formatting.
+- `src/services/` contains business workflows and application rules.
+- `src/repositories/` contains database queries and persistence access.
+- `src/config/` holds shared configuration, including the PostgreSQL connection pool.
+- `src/middleware/` contains shared request and error handling.
+- `src/validators/` is for request validation schemas.
+- `src/utils/` is for small, reusable helpers.
+
+Keep feature behavior in services, SQL in repositories, and HTTP-specific concerns in controllers and routes.
+
+Use the reusable HTTP errors in `src/utils/error.js` (for example, `throw new NotFoundError('Client not found.')`). The error middleware returns safe client messages and codes, while logging server errors without exposing their details.
+
 ## Quality checks
 
 ```bash
@@ -99,6 +116,17 @@ backend/
   package.json Backend scripts and dependencies
   package-lock.json Locked backend dependencies
   migrations/ PostgreSQL schema migrations
+  src/
+    app.js        Express app configuration
+    server.js     HTTP server entry point
+    config/       Database and application configuration
+    controllers/  HTTP request handlers
+    middleware/   Shared request and error middleware
+    repositories/ Database queries
+    routes/       API route definitions
+    services/     Business logic
+    utils/        Shared helpers
+    validators/   Request validation schemas
 src/
   app/        Expo Router routes and screens
   components/ Reusable UI and feature components
