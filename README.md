@@ -1,56 +1,99 @@
-# Welcome to your Expo app 👋
+# TressTech
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+TressTech is a cross-platform salon hair-assessment and chemical-safety support application for stylists. It is designed to guide a consultation from client selection and hair-photo capture through hair-profile review, desired-color selection, formula guidance, and aftercare.
 
-## Get started
+The project currently provides a user-interface prototype. Dashboard records, reports, authentication, and analysis results use sample or in-memory data; the mobile screens are not yet connected to the PostgreSQL database. The database schema and migration workflow are included for backend development. Recommendations are decision support only and do not replace a stylist's professional judgment, strand testing, or product instructions.
 
-1. Install dependencies
+## Features
+
+- Staff-facing dashboard, client list, client profiles, and report history.
+- Client selection and sample client creation for a new consultation.
+- Camera capture and photo-library upload flows, including image-quality checks.
+- Hair-profile and desired-color screens, with example formula and aftercare guidance.
+- PostgreSQL schema migrations for users, clients, hair analyses, treatment records, chemical-safety references, and recommendations.
+- Android, iOS, and web targets powered by Expo.
+
+## Technology
+
+- Expo SDK 58 and Expo Router
+- React Native, React Native Web, and TypeScript
+- PostgreSQL and `node-pg-migrate`
+
+## Prerequisites
+
+- Node.js 22.13 or a later Node.js release supported by the installed Expo SDK. The `db:create` script also uses Node's built-in TypeScript type stripping.
+- npm
+- A PostgreSQL server and a database role with permission to create databases, if you plan to initialize the database locally.
+- Android Studio for an Android emulator, or macOS with Xcode for an iOS simulator. You can also run the web target.
+
+## Getting started
+
+1. Install the project dependencies:
 
    ```bash
    npm install
    ```
 
-2. Start the app
+2. Configure the root `.env` file for the database workflow. Set `DATABASE_URL` to a PostgreSQL connection string whose path is the target database name. `DB_NAME` is optional; when set, use the same database name as the URL path.
 
-   ```bash
-   npx expo start
+   ```dotenv
+   DATABASE_URL=postgresql://postgres:your_password@localhost:5432/tresstech
+   DB_NAME=tresstech
    ```
 
-In the output, you'll find options to open the app in a
+   Replace the example credentials and host with your own PostgreSQL settings. Do not commit real credentials. Keep database credentials out of client-side application code and public environment variables.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+3. If you are setting up the database, create it and apply the schema:
 
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+   ```bash
+   npm run db:create
+   npm run migrate
+   ```
 
-## Get a fresh project
+   `db:create` connects to the PostgreSQL maintenance database named `postgres`, using the host and credentials from `DATABASE_URL`. The database role must be allowed to create databases. If your provider does not allow creating databases through this connection, create the database through the provider's tools, then run `npm run migrate`.
 
-When you're ready, run:
+4. Start the app:
+
+   ```bash
+   npm start
+   ```
+
+   Use the Expo CLI prompts to open a platform, or start a specific target:
+
+   ```bash
+   npm run android
+   npm run ios
+   npm run web
+   ```
+
+Database setup is needed for the PostgreSQL schema and migration workflow; the current sample UI can be explored independently of persisted database records.
+
+## Database commands
+
+| Command | Description |
+| --- | --- |
+| `npm run db:create` | Create the database named by `DB_NAME` or the database path in `DATABASE_URL`. Does nothing if it already exists. |
+| `npm run migrate` | Apply pending migrations. |
+| `npm run migrate:down` | Roll back the most recently applied migration. Use with care. |
+| `npm run migrate:create -- <migration-name>` | Generate a migration file. |
+
+## Quality checks
 
 ```bash
-npm run reset-project
+npm run lint
+npx tsc --noEmit
 ```
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+## Project structure
 
-### Other setup steps
-
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```text
+assets/       App images, icons, and other static assets
+migrations/   PostgreSQL schema migrations
+src/
+  app/        Expo Router routes and screens
+  components/ Reusable UI and feature components
+  constants/  Shared theme and design constants
+  hooks/      Reusable React hooks
+  lib/        Database utilities
+  utils/      Shared utility functions
+```

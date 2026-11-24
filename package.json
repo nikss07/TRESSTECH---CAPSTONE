@@ -48,8 +48,9 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "migrate:create": "node-pg-migrate create",
-    "migrate:up": "node-pg-migrate up",
-    "migrate:down": "node-pg-migrate down"
+    "migrate": "node --env-file=.env ./node_modules/node-pg-migrate/bin/node-pg-migrate.js up",
+    "migrate:down": "node --env-file=.env ./node_modules/node-pg-migrate/bin/node-pg-migrate.js down",
+    "db:create": "node --env-file=.env --experimental-strip-types src/lib/create_database.ts"
   },
   "private": true
 }
